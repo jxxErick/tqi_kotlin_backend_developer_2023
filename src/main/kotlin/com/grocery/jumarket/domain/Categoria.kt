@@ -10,6 +10,4 @@ data class Categoria (
 
     @Column(nullable = false) var nome: String
 
-
-
 )
