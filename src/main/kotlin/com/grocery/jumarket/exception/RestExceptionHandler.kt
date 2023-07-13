@@ -1,5 +1,6 @@
 package com.grocery.jumarket.exception
 
+import com.grocery.jumarket.service.exception.BusinessException
 import com.grocery.jumarket.service.exception.NotFoundException
 import org.springframework.dao.DataAccessException
 import org.springframework.http.HttpStatus
