@@ -1,5 +1,6 @@
 package com.grocery.jumarket.domain
 
+import com.grocery.jumarket.repositories.CarrinhoRepository
 import jakarta.persistence.*
 
 @Entity
@@ -12,9 +13,10 @@ data class Usuario(
     var cpf: String,
 
     @OneToMany(mappedBy = "usuario")
-    val carrinho: List<Carrinho> = mutableListOf(),
+    val carrinho: MutableList<Carrinho> = mutableListOf(),
 
     @OneToMany(mappedBy = "usuario")
-    val venda: List<Venda> = mutableListOf()
-
+    val venda: List<Venda> = mutableListOf(),
 )
+
+

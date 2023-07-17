@@ -2,7 +2,7 @@ CREATE TABLE venda
 (
     id                 BIGINT AUTO_INCREMENT NOT NULL,
     valor_total        DOUBLE                NOT NULL,
-    forma_de_pagamento INT                   NULL,
+    forma_de_pagamento VARCHAR(255)          NULL,
     carrinho_id        BIGINT                NULL,
     usuario_id         BIGINT                NULL,
     CONSTRAINT pk_venda PRIMARY KEY (id)

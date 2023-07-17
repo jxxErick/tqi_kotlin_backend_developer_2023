@@ -1,6 +1,6 @@
 package com.grocery.jumarket.ennumeration
 
-enum class formaDePagamento {
+enum class FormaDePagamento {
     CARTAO_DE_CREDITO,
     CARTAO_DE_DEBITO,
     DINHEIRO,

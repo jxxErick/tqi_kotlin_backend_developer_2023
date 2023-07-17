@@ -1,5 +1,6 @@
 package com.grocery.jumarket.domain
 
+import com.grocery.jumarket.ennumeration.StatusCarrinho
 import jakarta.persistence.*
 
 @Entity
@@ -23,7 +24,22 @@ data class Carrinho(
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "usuario_id")
-        var usuario: Usuario?
+        var usuario: Usuario?,
+        @Enumerated(EnumType.STRING)
+        var status: StatusCarrinho = StatusCarrinho.PENDENTE
 
 
-        )
+        ) {
+        fun adicionarProduto(produto: Produto) {
+                produtos.add(produto)
+                precoTotal += produto.precoUnitario
+        }
+
+        fun removerProdutoPorId(produtoId: Long) {
+                val produto = produtos.find { it.id == produtoId }
+                if (produto != null) {
+                        produtos.remove(produto)
+                        precoTotal -= produto.precoUnitario
+                }
+        }
+}

@@ -1,14 +1,16 @@
 package com.grocery.jumarket.service.impl
+import com.grocery.jumarket.domain.Carrinho
 import com.grocery.jumarket.domain.Usuario
 import com.grocery.jumarket.dto.NewUsuarioDTO
 import com.grocery.jumarket.dto.UsuarioDTO
+import com.grocery.jumarket.repositories.CarrinhoRepository
 import com.grocery.jumarket.service.exception.BusinessException
 import com.grocery.jumarket.repositories.UsuarioRepository
 import com.grocery.jumarket.service.IUsuarioService
 import com.grocery.jumarket.service.exception.NotFoundException
 import org.springframework.stereotype.Service
 @Service
-class UsuarioService(private val usuarioRepository: UsuarioRepository) : IUsuarioService {
+class UsuarioService(private val usuarioRepository: UsuarioRepository, private val carrinhoRepository: CarrinhoRepository) : IUsuarioService {
     override fun criarUsuario(usuarioDTO: NewUsuarioDTO): UsuarioDTO {
         val emailExistente = usuarioRepository.findByEmail(usuarioDTO.email)
         if (emailExistente != null) {
@@ -23,10 +25,15 @@ class UsuarioService(private val usuarioRepository: UsuarioRepository) : IUsuari
         val novoUsuario = Usuario(
             email = usuarioDTO.email,
             nome = usuarioDTO.nome,
-            cpf = usuarioDTO.cpf
+            cpf = usuarioDTO.cpf,
+            carrinho = mutableListOf()
         )
 
+        val carrinho = Carrinho(usuario = novoUsuario, venda = null)
+        novoUsuario.carrinho.add(carrinho)
+
         val usuarioSalvo = usuarioRepository.save(novoUsuario)
+        carrinhoRepository.save(carrinho)
 
         return UsuarioDTO(
             id = usuarioSalvo.id,
@@ -35,6 +42,7 @@ class UsuarioService(private val usuarioRepository: UsuarioRepository) : IUsuari
             cpf = usuarioSalvo.cpf
         )
     }
+
 
     override fun listarUsuarios(): List<UsuarioDTO> {
         val usuarios = usuarioRepository.findAll()

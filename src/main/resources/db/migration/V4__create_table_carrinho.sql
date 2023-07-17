@@ -3,6 +3,7 @@ CREATE TABLE carrinho
     id          BIGINT AUTO_INCREMENT NOT NULL,
     preco_total DOUBLE                NOT NULL,
     usuario_id  BIGINT                NULL,
+    status      VARCHAR(255)          NULL,
     CONSTRAINT pk_carrinho PRIMARY KEY (id)
 );
 
@@ -19,4 +20,4 @@ ALTER TABLE produto_carrinho
     ADD CONSTRAINT fk_procar_on_carrinho FOREIGN KEY (carrinho_id) REFERENCES carrinho (id);
 
 ALTER TABLE produto_carrinho
-    ADD CONSTRAINT fk_procar_on_produto FOREIGN KEY (produto_id) REFERENCES produto (i
+    ADD CONSTRAINT fk_procar_on_produto FOREIGN KEY (produto_id) REFERENCES produto (id);

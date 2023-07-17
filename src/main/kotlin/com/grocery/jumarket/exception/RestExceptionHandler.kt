@@ -60,7 +60,7 @@ class RestExceptionHandler {
         return ResponseEntity(exceptionDetails, HttpStatus.BAD_REQUEST)
     }
     @ExceptionHandler(NotFoundException::class)
-    fun handleCategoriaNotFoundException(ex: NotFoundException): ResponseEntity<ExceptionDetails> {
+    fun handleNotFoundException(ex: NotFoundException): ResponseEntity<ExceptionDetails> {
         val exceptionDetails = ExceptionDetails(
                 title = "Não encontrado!",
                 timestamp = LocalDateTime.now(),

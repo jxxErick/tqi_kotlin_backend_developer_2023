@@ -1,6 +1,6 @@
 package com.grocery.jumarket.domain
 
-import com.grocery.jumarket.ennumeration.formaDePagamento
+import com.grocery.jumarket.ennumeration.FormaDePagamento
 import jakarta.persistence.*
 
 @Entity
@@ -10,7 +10,8 @@ data class Venda (
         var id: Long? = null,
 
         val valorTotal: Double,
-        val formaDePagamento: formaDePagamento,
+        @Enumerated(EnumType.STRING)
+        val formaDePagamento: FormaDePagamento,
 
         @OneToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "carrinho_id")
