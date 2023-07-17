@@ -12,4 +12,5 @@ data class Categoria (
 
     @OneToMany(mappedBy = "categoria")
     val produtos: List<Produto> = mutableListOf()
+
 )

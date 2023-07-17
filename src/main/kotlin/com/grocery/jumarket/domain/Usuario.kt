@@ -1,15 +1,20 @@
 package com.grocery.jumarket.domain
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 data class Usuario(
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     var email: String,
     var nome: String,
-    var cpf: String
+    var cpf: String,
+
+    @OneToMany(mappedBy = "usuario")
+    val carrinho: List<Carrinho> = mutableListOf(),
+
+    @OneToMany(mappedBy = "usuario")
+    val venda: List<Venda> = mutableListOf()
+
 )

@@ -15,10 +15,9 @@ class ProdutoService(
         private val categoriaRepository: CategoriaRepository
 ) : IProdutoService {
     override fun criarProduto(produtoDTO: NewProdutoDTO): ProdutoDTO {
-        val categoria = categoriaRepository.findById(produtoDTO.categoriaId)
-                .orElseThrow { NotFoundException("Categoria não encontrada") }
+        val categoria = categoriaRepository.findById(produtoDTO.categoriaId).orElseThrow { NotFoundException("Categoria não encontrada") }
 
-        val novoProduto = Produto(
+        val novoProduto = Produto (
                 nome = produtoDTO.nome,
                 unidadeDeMedida = produtoDTO.unidadeDeMedida,
                 precoUnitario = produtoDTO.precoUnitario,

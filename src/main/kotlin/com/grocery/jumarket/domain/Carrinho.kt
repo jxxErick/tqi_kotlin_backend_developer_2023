@@ -1,22 +1,29 @@
 package com.grocery.jumarket.domain
 
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
+import jakarta.persistence.*
 
 @Entity
 data class Carrinho(
+
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long? = null,
 
-        @OneToMany(cascade = [CascadeType.ALL], mappedBy = "carrinho")
-        val itens: List<ItemCarrinho> = mutableListOf(),
+        @ManyToMany
+        @JoinTable(
+                name = "produto_carrinho",
+                joinColumns = [JoinColumn(name = "carrinho_id")],
+                inverseJoinColumns = [JoinColumn(name = "produto_id")]
+        )
+        var produtos: MutableList<Produto> = mutableListOf(),
 
-        @ManyToOne
-        val venda: Venda? = null
+        var precoTotal: Double = 0.0,
+
+        @OneToOne(mappedBy = "carrinho")
+        var venda: Venda?,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "usuario_id")
+        var usuario: Usuario?
+
 
         )

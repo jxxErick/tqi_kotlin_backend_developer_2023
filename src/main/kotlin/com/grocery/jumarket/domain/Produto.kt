@@ -4,6 +4,7 @@ import jakarta.persistence.*
 
 @Entity
 data class Produto(
+
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long? = null,
 
@@ -13,5 +14,8 @@ data class Produto(
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "categoria_id")
-        val categoria: Categoria
+        val categoria: Categoria,
+
+        @ManyToMany(mappedBy = "produtos")
+        val carrinhos: MutableList<Carrinho> = mutableListOf()
 )

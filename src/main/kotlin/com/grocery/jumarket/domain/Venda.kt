@@ -5,13 +5,18 @@ import jakarta.persistence.*
 
 @Entity
 data class Venda (
+
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long? = null,
 
         val valorTotal: Double,
         val formaDePagamento: formaDePagamento,
 
-        @OneToMany(mappedBy = "venda", cascade = [CascadeType.ALL])
-        val carrinhos: List<Carrinho> = mutableListOf()
+        @OneToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "carrinho_id")
+        val carrinho: Carrinho,
 
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "usuario_id")
+        val usuario: Usuario?
 )
