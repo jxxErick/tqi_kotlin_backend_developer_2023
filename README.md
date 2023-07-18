@@ -1,4 +1,4 @@
-﻿<h1>request-credit-system</h1>
+﻿<h1>jumarket-API</h1>
 <p align="center">API Rest para um Sistema de Analise de Solicitação de Crédito</p>
 <p align="center">
      <a alt="Java">
@@ -22,9 +22,9 @@
 
 </p>
 
-<h3>Descrição do Projeto</h3>
+<center><h3>Descrição do Projeto</h3>
     <img src="https://i.imgur.com/JdoXVJO_d.webp?maxwidth=760&fidelity=grand">
-<p> Api de comercio online
+<p> Api de comercio online </p></center>
 
 -> Metodos CRUD para categoria<br>
 -> Metodo Create para Usuario, assim que criado instancia um carrinho associado a sua id, e outros metodos do CRUD<br>
