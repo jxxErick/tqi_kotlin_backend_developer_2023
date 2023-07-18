@@ -14,6 +14,7 @@ class CategoriaResource(private val categoriaService: CategoriaService) {
 
     // Cria uma categoria
     @PostMapping
+    @ResponseStatus(HttpStatus.OK)
     fun criarCategoria(@RequestBody categoriaDTO: CategoriaDTO): ResponseEntity<CategoriaDTO> {
         val novaCategoria = categoriaService.criarCategoria(categoriaDTO)
         return ResponseEntity.status(HttpStatus.CREATED).body(novaCategoria)
@@ -21,6 +22,7 @@ class CategoriaResource(private val categoriaService: CategoriaService) {
 
     // Lista elas
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     fun listarCategorias(): ResponseEntity<List<CategoriaDTO>> {
         val categorias = categoriaService.listarCategorias()
         return ResponseEntity.ok(categorias)
@@ -28,6 +30,7 @@ class CategoriaResource(private val categoriaService: CategoriaService) {
 
     // pega uma pela id
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     fun getCategoriaPorId(@PathVariable id: Long): ResponseEntity<CategoriaDTO> {
         val categoria = categoriaService.getCategoriaPorId(id)
         return ResponseEntity.ok(categoria)
@@ -35,12 +38,14 @@ class CategoriaResource(private val categoriaService: CategoriaService) {
 
     // deleta passando id
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deletarCategoria(@PathVariable id: Long) {
         categoriaService.deletarCategoria(id)
     }
 
     // edita ela passando o id
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     fun editarCategoria(@PathVariable id: Long, @RequestBody newCategoriaDTO: NewCategoriaDTO): Categoria {
         return categoriaService.editarCategoria(id, newCategoriaDTO)
     }

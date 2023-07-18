@@ -9,4 +9,5 @@ interface IProdutoService {
     fun getProdutoPorId(id: Long): ProdutoDTO
     fun atualizarProduto(id: Long, produtoDTO: NewProdutoDTO): ProdutoDTO
     fun deletarProduto(id: Long)
+    fun listarProdutosPorCategoria(categoriaId: Long): List<ProdutoDTO>
 }

@@ -13,6 +13,7 @@ class ProdutoResource(private val produtoService: ProdutoService) {
 
     //cria produto
     @PostMapping
+    @ResponseStatus(HttpStatus.OK)
     fun criarProduto(@RequestBody produtoDTO: NewProdutoDTO): ResponseEntity<ProdutoDTO> {
         val novoProduto = produtoService.criarProduto(produtoDTO)
         return ResponseEntity.status(HttpStatus.CREATED).body(novoProduto)
@@ -20,6 +21,7 @@ class ProdutoResource(private val produtoService: ProdutoService) {
 
     // lista produtos
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     fun listarProdutos(): ResponseEntity<List<ProdutoDTO>> {
         val produtos = produtoService.listarProdutos()
         return ResponseEntity.ok(produtos)
@@ -27,6 +29,7 @@ class ProdutoResource(private val produtoService: ProdutoService) {
 
     //pega produto por id
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     fun getProdutoPorId(@PathVariable id: Long): ResponseEntity<ProdutoDTO> {
         val produto = produtoService.getProdutoPorId(id)
         return ResponseEntity.ok(produto)
@@ -34,6 +37,7 @@ class ProdutoResource(private val produtoService: ProdutoService) {
 
     //atualiza produto por id
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     fun atualizarProduto(
             @PathVariable id: Long,
             @RequestBody produtoDTO: NewProdutoDTO
@@ -47,5 +51,13 @@ class ProdutoResource(private val produtoService: ProdutoService) {
     fun deletarProduto(@PathVariable id: Long) {
         produtoService.deletarProduto(id)
     }
+    //Lista produtos pela categoria
+    @GetMapping("/categoria/{categoriaId}")
+    @ResponseStatus(HttpStatus.OK)
+    fun listarProdutosPorCategoria(@PathVariable categoriaId: Long): ResponseEntity<List<ProdutoDTO>> {
+        val produtos = produtoService.listarProdutosPorCategoria(categoriaId)
+        return ResponseEntity.ok(produtos)
+    }
+
 }
 

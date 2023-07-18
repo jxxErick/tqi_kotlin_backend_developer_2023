@@ -2,10 +2,8 @@ package com.grocery.jumarket.controller
 
 import com.grocery.jumarket.dto.FinalizarVendaDTO
 import com.grocery.jumarket.service.impl.VendaService
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/venda")
@@ -14,6 +12,7 @@ class VendaResource(
 ) {
     // finaliza uma venda
     @PostMapping
+    @ResponseStatus(HttpStatus.OK)
     fun finalizarVenda(@RequestBody finalizarVendaDTO: FinalizarVendaDTO) {
         vendaService.finalizarVenda(finalizarVendaDTO)
     }

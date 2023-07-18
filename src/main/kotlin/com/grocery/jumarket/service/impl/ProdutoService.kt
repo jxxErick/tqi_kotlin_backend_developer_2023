@@ -79,6 +79,22 @@ class ProdutoService(
                 categoriaId = produtoAtualizado.categoria.id
         )
     }
+    override fun listarProdutosPorCategoria(categoriaId: Long): List<ProdutoDTO> {
+        val categoria = categoriaRepository.findById(categoriaId)
+            .orElseThrow { NotFoundException("Categoria não encontrada") }
+
+        val produtos = produtoRepository.findByCategoria(categoria)
+
+        return produtos.map { produto ->
+            ProdutoDTO(
+                id = produto.id,
+                nome = produto.nome,
+                unidadeDeMedida = produto.unidadeDeMedida,
+                precoUnitario = produto.precoUnitario,
+                categoriaId = produto.categoria.id
+            )
+        }
+    }
 
     override  fun deletarProduto(id: Long) {
         if (!produtoRepository.existsById(id)) {
