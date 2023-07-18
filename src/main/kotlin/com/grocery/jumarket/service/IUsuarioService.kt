@@ -11,5 +11,5 @@ interface IUsuarioService {
     fun getUsuarioPorId(id: Long): UsuarioDTO
     fun getUsuarioPorEmail(email: String): UsuarioDTO?
     fun atualizarUsuario(id: Long, usuarioDTO: NewUsuarioDTO): UsuarioDTO
-    fun deletarUsuario(id: Long)
+
 }

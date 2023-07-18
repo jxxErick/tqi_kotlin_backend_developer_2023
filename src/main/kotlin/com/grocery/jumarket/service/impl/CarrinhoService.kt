@@ -9,6 +9,8 @@ import com.grocery.jumarket.dto.ProdutoDTO
 import com.grocery.jumarket.ennumeration.StatusCarrinho
 import com.grocery.jumarket.repositories.CarrinhoRepository
 import com.grocery.jumarket.repositories.ProdutoRepository
+import com.grocery.jumarket.service.ICarrinhoService
+
 import com.grocery.jumarket.service.exception.BusinessException
 import com.grocery.jumarket.service.exception.NotFoundException
 import org.springframework.stereotype.Service
@@ -16,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class CarrinhoService(
+class CarrinhoService (
     private val carrinhoRepository: CarrinhoRepository,
     private val produtoRepository: ProdutoRepository
-) {
-    fun adicionarUmProdutoAoCarrinho(carrinhoDto: CarrinhoDTO) {
+): ICarrinhoService {
+    override fun adicionarUmProdutoAoCarrinho(carrinhoDto: CarrinhoDTO) {
         val carrinho = carrinhoRepository.findById(carrinhoDto.carrinhoId)
             .orElseThrow { NotFoundException("Carrinho não encontrado") }
 
@@ -35,7 +37,7 @@ class CarrinhoService(
         carrinhoRepository.save(carrinho)
     }
 
-    fun removerItemDoCarrinhoPorId(carrinhoId: Long, produtoId: Long) {
+    override fun removerItemDoCarrinhoPorId(carrinhoId: Long, produtoId: Long) {
         val carrinho = carrinhoRepository.findById(carrinhoId)
             .orElseThrow { NotFoundException("Carrinho não encontrado") }
 

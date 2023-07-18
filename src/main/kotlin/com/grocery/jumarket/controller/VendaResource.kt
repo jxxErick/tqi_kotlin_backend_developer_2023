@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 class VendaResource(
     private val vendaService: VendaService
 ) {
+    // finaliza uma venda
     @PostMapping
     fun finalizarVenda(@RequestBody finalizarVendaDTO: FinalizarVendaDTO) {
         vendaService.finalizarVenda(finalizarVendaDTO)

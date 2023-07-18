@@ -7,6 +7,7 @@ import com.grocery.jumarket.ennumeration.StatusCarrinho
 import com.grocery.jumarket.repositories.CarrinhoRepository
 import com.grocery.jumarket.repositories.UsuarioRepository
 import com.grocery.jumarket.repositories.VendaRepository
+import com.grocery.jumarket.service.IVendaService
 import com.grocery.jumarket.service.exception.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional
 class VendaService(
     private val vendaRepository: VendaRepository,
     private val carrinhoRepository: CarrinhoRepository,
-) {
-     fun finalizarVenda(vendaDto: FinalizarVendaDTO) {
+) : IVendaService{
+     override fun finalizarVenda(vendaDto: FinalizarVendaDTO) {
         val carrinho = carrinhoRepository.findById(vendaDto.carrinhoId)
             .orElseThrow { NoSuchElementException("Carrinho não encontrado") }
 

@@ -3,6 +3,7 @@ import com.grocery.jumarket.domain.Carrinho
 import com.grocery.jumarket.domain.Usuario
 import com.grocery.jumarket.dto.NewUsuarioDTO
 import com.grocery.jumarket.dto.UsuarioDTO
+import com.grocery.jumarket.ennumeration.StatusCarrinho
 import com.grocery.jumarket.repositories.CarrinhoRepository
 import com.grocery.jumarket.service.exception.BusinessException
 import com.grocery.jumarket.repositories.UsuarioRepository
@@ -28,7 +29,7 @@ class UsuarioService(private val usuarioRepository: UsuarioRepository, private v
             cpf = usuarioDTO.cpf,
             carrinho = mutableListOf()
         )
-
+        // cria um carrinho assim que cria o usuario
         val carrinho = Carrinho(usuario = novoUsuario, venda = null)
         novoUsuario.carrinho.add(carrinho)
 
@@ -98,11 +99,5 @@ class UsuarioService(private val usuarioRepository: UsuarioRepository, private v
         )
     }
 
-    override fun deletarUsuario(id: Long) {
-        if (!usuarioRepository.existsById(id)) {
-            throw NotFoundException("Usuário não encontrado")
-        }
 
-        usuarioRepository.deleteById(id)
-    }
 }

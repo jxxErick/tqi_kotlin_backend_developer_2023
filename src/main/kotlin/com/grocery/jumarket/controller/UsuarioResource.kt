@@ -10,30 +10,31 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/usuarios")
 class UsuarioResource(private val usuarioService: IUsuarioService) {
+    //cria um usuario
     @PostMapping
     fun criarUsuario(@RequestBody usuarioDTO: NewUsuarioDTO): ResponseEntity<UsuarioDTO> {
         val novoUsuario = usuarioService.criarUsuario(usuarioDTO)
         return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario)
     }
-
+    //lista os usuarios
     @GetMapping
     fun listarUsuarios(): ResponseEntity<List<UsuarioDTO>> {
         val usuarios = usuarioService.listarUsuarios()
         return ResponseEntity.ok(usuarios)
     }
-
+    // pega usuario pela id
     @GetMapping("/{id}")
     fun getUsuarioPorId(@PathVariable id: Long): ResponseEntity<UsuarioDTO> {
         val usuario = usuarioService.getUsuarioPorId(id)
         return ResponseEntity.ok(usuario)
     }
-
+// pega usuario pelo email
     @GetMapping("/email/{email}")
     fun getUsuarioPorEmail(@PathVariable email: String): ResponseEntity<UsuarioDTO?> {
         val usuario = usuarioService.getUsuarioPorEmail(email)
         return ResponseEntity.ok(usuario)
     }
-
+// atualiza alguns campos do usuario pela id
     @PutMapping("/{id}")
     fun atualizarUsuario(
         @PathVariable id: Long,
@@ -42,7 +43,7 @@ class UsuarioResource(private val usuarioService: IUsuarioService) {
         val usuarioAtualizado = usuarioService.atualizarUsuario(id, usuarioDTO)
         return ResponseEntity.ok(usuarioAtualizado)
     }
-
+// deleta usuario pela id
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deletarUsuario(@PathVariable id: Long) {
