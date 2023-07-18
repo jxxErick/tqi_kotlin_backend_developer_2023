@@ -17,6 +17,8 @@ class VendaResource(
     fun finalizarVenda(@RequestBody finalizarVendaDTO: FinalizarVendaDTO) {
         vendaService.finalizarVenda(finalizarVendaDTO)
     }
+
+    //lista produtos vendidos pela id
     @GetMapping("/{idVenda}")
     fun listarProdutosVendidosPorId(@PathVariable idVenda: Long): VendaDTO? {
         return vendaService.listarProdutosVendidos(idVenda)

@@ -28,6 +28,7 @@ class CarrinhoResource(
     ) {
         carrinhoService.removerItemDoCarrinhoPorId(carrinhoId, produtoId)
     }
+    // lista produtos pela id
     @GetMapping("/{carrinhoId}")
     @ResponseStatus(HttpStatus.OK)
     fun listarProdutosDoCarrinho(@PathVariable carrinhoId: Long): NewCarrinhoDTO {
