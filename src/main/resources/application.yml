@@ -1,4 +1,24 @@
 spring:
+  profiles:
+    active: h2
+
+---
+
+spring:
+  profiles: mysql
+  datasource:
+    url: jdbc:mysql://localhost:3306/jumarket
+    username: erick
+    password: tqi@
+  jpa:
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+
+---
+
+spring:
+  profiles: h2
   datasource:
     url: jdbc:h2:mem:credit_application_system_db
     username: jax
@@ -14,6 +34,3 @@ spring:
       settings:
         trace: false
         web-allow-others: false
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
