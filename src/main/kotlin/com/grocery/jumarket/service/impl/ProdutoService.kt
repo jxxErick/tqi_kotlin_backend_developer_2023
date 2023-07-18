@@ -15,6 +15,7 @@ class ProdutoService(
         private val categoriaRepository: CategoriaRepository
 ) : IProdutoService {
     override fun criarProduto(produtoDTO: NewProdutoDTO): ProdutoDTO {
+        // verifica se existe
         val categoria = categoriaRepository.findById(produtoDTO.categoriaId).orElseThrow { NotFoundException("Categoria não encontrada") }
 
         val novoProduto = Produto (
