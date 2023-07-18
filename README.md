@@ -23,7 +23,10 @@
 </p>
 
 <h3 align="center" >Descrição do Projeto</h3 >
-    <img align="center" src="https://i.imgur.com/JdoXVJO_d.webp?maxwidth=760&fidelity=grand" >
+<div style="text-align: center;">
+  <img src="https://i.imgur.com/JdoXVJO_d.webp?maxwidth=760&fidelity=grand" style="max-width: 50%;">
+</div>
+
 <p align="center"> Api de comercio online </p>
 
 -> Metodos CRUD para categoria<br>
