@@ -5,6 +5,8 @@ import com.grocery.jumarket.domain.Carrinho
 import com.grocery.jumarket.domain.Categoria
 import com.grocery.jumarket.domain.Produto
 import com.grocery.jumarket.dto.CarrinhoDTO
+import com.grocery.jumarket.dto.NewCarrinhoDTO
+import com.grocery.jumarket.dto.NewProdutoDTO
 import com.grocery.jumarket.dto.ProdutoDTO
 import com.grocery.jumarket.ennumeration.StatusCarrinho
 import com.grocery.jumarket.repositories.CarrinhoRepository
@@ -50,5 +52,27 @@ class CarrinhoService (
         carrinho.removerProdutoPorId(produtoId)
         carrinhoRepository.save(carrinho)
     }
-}
 
+    override fun listarProdutosDoCarrinho(carrinhoId: Long): NewCarrinhoDTO {
+        val carrinho = obterCarrinhoPorId(carrinhoId)
+        val produtos = carrinho.produtos.map { produto ->
+            NewProdutoDTO(
+                nome = produto.nome,
+                unidadeDeMedida = produto.unidadeDeMedida,
+                precoUnitario = produto.precoUnitario,
+                categoriaId = produto.categoria.id!!
+            )
+        }
+        val carrinhoDTO = NewCarrinhoDTO(
+            carrinhoId = carrinho.id!!,
+            produtos = produtos,
+            precoTotal = carrinho.precoTotal
+        )
+        return carrinhoDTO
+    }
+
+    private fun obterCarrinhoPorId(carrinhoId: Long): Carrinho {
+        return carrinhoRepository.findById(carrinhoId)
+            .orElseThrow { NotFoundException("Carrinho não encontrado") }
+    }
+}

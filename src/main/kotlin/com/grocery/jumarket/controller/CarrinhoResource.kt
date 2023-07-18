@@ -1,6 +1,8 @@
 package com.grocery.jumarket.controller
 
 import com.grocery.jumarket.dto.CarrinhoDTO
+import com.grocery.jumarket.dto.NewCarrinhoDTO
+import com.grocery.jumarket.dto.ProdutoDTO
 import com.grocery.jumarket.service.impl.CarrinhoService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -25,5 +27,10 @@ class CarrinhoResource(
         @PathVariable produtoId: Long
     ) {
         carrinhoService.removerItemDoCarrinhoPorId(carrinhoId, produtoId)
+    }
+    @GetMapping("/{carrinhoId}")
+    @ResponseStatus(HttpStatus.OK)
+    fun listarProdutosDoCarrinho(@PathVariable carrinhoId: Long): NewCarrinhoDTO {
+        return carrinhoService.listarProdutosDoCarrinho(carrinhoId)
     }
 }

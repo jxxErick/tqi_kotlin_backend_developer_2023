@@ -32,6 +32,8 @@
 -> Metodos CRUD para produtos<br>
 -> Metodos para manipular carrinho de compra<br>
 ->Metodos para finalizar a compra e iniciar outro carrinho<br>
+
+
  </p>
 
 <h3>Instrução de Uso</h3>

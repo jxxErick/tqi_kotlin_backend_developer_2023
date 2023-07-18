@@ -10,6 +10,9 @@ import com.grocery.jumarket.repositories.UsuarioRepository
 import com.grocery.jumarket.service.IUsuarioService
 import com.grocery.jumarket.service.exception.NotFoundException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+@Transactional
 @Service
 class UsuarioService(private val usuarioRepository: UsuarioRepository, private val carrinhoRepository: CarrinhoRepository) : IUsuarioService {
     override fun criarUsuario(usuarioDTO: NewUsuarioDTO): UsuarioDTO {

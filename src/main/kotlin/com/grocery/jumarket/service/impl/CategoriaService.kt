@@ -7,7 +7,9 @@ import com.grocery.jumarket.service.exception.NotFoundException
 import com.grocery.jumarket.repositories.CategoriaRepository
 import com.grocery.jumarket.service.ICategoriaService
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
+@Transactional
 @Service
 class CategoriaService(private val categoriaRepository: CategoriaRepository) : ICategoriaService {
     override fun criarCategoria(categoriaDTO: CategoriaDTO): CategoriaDTO {
