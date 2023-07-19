@@ -42,4 +42,9 @@ class CarrinhoResource(
         return carrinhoService.listarItens(carrinhoId)
     }
 
+    @DeleteMapping("/{usuarioId}")
+    fun deletarCarrinho(@PathVariable usuarioId: Long): ResponseEntity<Void> {
+        carrinhoService.deletarCarrinho(usuarioId)
+        return ResponseEntity.noContent().build()
+    }
 }

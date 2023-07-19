@@ -40,11 +40,16 @@ class CarrinhoService (
 
 
    override fun removerItem(carrinhoId: Long, produtoId: Long) {
+       // busca o carrinho
         val carrinho = carrinhoRepository.findById(carrinhoId)
             .orElseThrow { NotFoundException("Carrinho não encontrado") }
-
+        //deleta o produto
         carrinho.removerItem(produtoId)
         carrinhoRepository.save(carrinho)
+        // caso o carrinho fique vazio apaga ele
+       if (carrinho.itens.isEmpty()) {
+           carrinhoRepository.delete(carrinho)
+       }
     }
 
     //lista todos itens do carrinho
@@ -65,6 +70,16 @@ class CarrinhoService (
                 quantidade = item.quantidade,
                 precoUnitario = item.precoUnitario
             )
+        }
+    }
+
+    override fun deletarCarrinho(usuarioId: Long) {
+        val usuario = usuarioRepository.findById(usuarioId)
+            .orElseThrow { NotFoundException("Carrinho não encontrado") }
+        val carrinho = usuario.carrinho
+
+        if (carrinho != null) {
+            carrinhoRepository.delete(carrinho)
         }
     }
     // essa função criei só pra auxiliar na de adcionar item, caso o usuario nao tenha um carrinho, ela cria automaticamente um

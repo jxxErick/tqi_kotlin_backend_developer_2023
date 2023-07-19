@@ -11,7 +11,7 @@ interface ICarrinhoService {
     fun adicionarItem(carrinhoDTO: CarrinhoDTO)
     fun removerItem(carrinhoId: Long, produtoId: Long)
     fun listarItens(carrinhoId: Long): List<ItemCarrinhoDTO>
-
+    fun deletarCarrinho(usuarioId: Long)
 
 
 }
