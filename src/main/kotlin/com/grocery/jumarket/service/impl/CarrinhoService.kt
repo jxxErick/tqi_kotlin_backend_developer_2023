@@ -28,7 +28,7 @@ class CarrinhoService (
         // Verifica se o usuario existe
         val usuario = usuarioRepository.findById(carrinhoDTO.usuarioId)
             .orElseThrow { NotFoundException("Usuário não encontrado") }
-        // Caso o usuario n tenha nenhum carrinho, cria um
+        // buscar o carrinho do usuario, caso ele nao tenha, cria um
         val carrinho = usuario.carrinho ?: criarCarrinhoCasoAdicioneProduto(usuario)
         // verifica se o produto existe
         val produto = produtoRepository.findById(carrinhoDTO.produtoId)
