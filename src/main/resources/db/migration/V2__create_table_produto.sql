@@ -1,9 +1,9 @@
 CREATE TABLE produto
 (
     id                BIGINT AUTO_INCREMENT NOT NULL,
-    nome              VARCHAR(255)          NULL,
-    unidade_de_medida VARCHAR(255)          NULL,
-    preco_unitario    DOUBLE                NOT NULL,
+    nome              VARCHAR(255)          NOT NULL,
+    unidade_de_medida VARCHAR(255)          NOT NULL,
+    preco_unitario    DECIMAL               NOT NULL,
     categoria_id      BIGINT                NULL,
     CONSTRAINT pk_produto PRIMARY KEY (id)
 );

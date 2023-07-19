@@ -3,6 +3,7 @@ package com.grocery.jumarket.dto
 import com.grocery.jumarket.ennumeration.FormaDePagamento
 
 data class FinalizarVendaDTO(
-    val carrinhoId: Long,
-    val formaDePagamento: FormaDePagamento
+    val usuarioId: Long,
+    val formaDePagamento: FormaDePagamento,
+    val itensVendidos: List<ItemVendidoDTO>
 )

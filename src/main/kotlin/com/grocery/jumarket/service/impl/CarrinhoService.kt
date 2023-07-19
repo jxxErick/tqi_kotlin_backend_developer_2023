@@ -2,15 +2,12 @@ package com.grocery.jumarket.service.impl
 
 
 import com.grocery.jumarket.domain.Carrinho
-import com.grocery.jumarket.domain.Categoria
-import com.grocery.jumarket.domain.Produto
-import com.grocery.jumarket.dto.CarrinhoDTO
-import com.grocery.jumarket.dto.NewCarrinhoDTO
-import com.grocery.jumarket.dto.NewProdutoDTO
-import com.grocery.jumarket.dto.ProdutoDTO
-import com.grocery.jumarket.ennumeration.StatusCarrinho
+import com.grocery.jumarket.domain.ItemCarrinho
+import com.grocery.jumarket.domain.Usuario
+import com.grocery.jumarket.dto.*
 import com.grocery.jumarket.repositories.CarrinhoRepository
 import com.grocery.jumarket.repositories.ProdutoRepository
+import com.grocery.jumarket.repositories.UsuarioRepository
 import com.grocery.jumarket.service.ICarrinhoService
 
 import com.grocery.jumarket.service.exception.BusinessException
@@ -22,57 +19,58 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class CarrinhoService (
     private val carrinhoRepository: CarrinhoRepository,
-    private val produtoRepository: ProdutoRepository
+    private val produtoRepository: ProdutoRepository,
+    private val usuarioRepository: UsuarioRepository
 ): ICarrinhoService {
-    override fun adicionarUmProdutoAoCarrinho(carrinhoDto: CarrinhoDTO) {
-        // verifica se carrinho existe
-        val carrinho = carrinhoRepository.findById(carrinhoDto.carrinhoId)
-            .orElseThrow { NotFoundException("Carrinho não encontrado") }
-        // verifica se carrinho foi finalizado
-        if (carrinho.status == StatusCarrinho.FINALIZADO) {
-            throw BusinessException("Não é possível adicionar itens a um carrinho finalizado.")
-        }
-        //verifica se produto existe
-        val produto = produtoRepository.findById(carrinhoDto.produtoId)
+
+    //Adiciona item ao carrinho do usuario passando a id dele
+    override fun adicionarItem(carrinhoDTO: CarrinhoDTO) {
+        // Verifica se o usuario existe
+        val usuario = usuarioRepository.findById(carrinhoDTO.usuarioId)
+            .orElseThrow { NotFoundException("Usuário não encontrado") }
+        // Caso o usuario n tenha nenhum carrinho, cria um
+        val carrinho = usuario.carrinho ?: criarCarrinhoCasoAdicioneProduto(usuario)
+        // verifica se o produto existe
+        val produto = produtoRepository.findById(carrinhoDTO.produtoId)
             .orElseThrow { NotFoundException("Produto não encontrado") }
-        // salva
-        carrinho.adicionarProduto(produto)
+        // adiciona o produto ao carrinho
+        carrinho.adicionarItem(ItemCarrinho(produto, carrinhoDTO.quantidade, produto.precoUnitario))
         carrinhoRepository.save(carrinho)
     }
 
-    override fun removerItemDoCarrinhoPorId(carrinhoId: Long, produtoId: Long) {
-        // verifica se carrinho existe
+
+   override fun removerItem(carrinhoId: Long, produtoId: Long) {
         val carrinho = carrinhoRepository.findById(carrinhoId)
             .orElseThrow { NotFoundException("Carrinho não encontrado") }
-        // verifica se ja foi finalizado
-        if (carrinho.status == StatusCarrinho.FINALIZADO) {
-            throw BusinessException("Não é possível remover itens de um carrinho finalizado.")
-        }
-        // deleta
-        carrinho.removerProdutoPorId(produtoId)
+
+        carrinho.removerItem(produtoId)
         carrinhoRepository.save(carrinho)
     }
 
-    override fun listarProdutosDoCarrinho(carrinhoId: Long): NewCarrinhoDTO {
-        val carrinho = obterCarrinhoPorId(carrinhoId)
-        val produtos = carrinho.produtos.map { produto ->
-            NewProdutoDTO(
-                nome = produto.nome,
-                unidadeDeMedida = produto.unidadeDeMedida,
-                precoUnitario = produto.precoUnitario,
-                categoriaId = produto.categoria.id!!
+    //lista todos itens do carrinho
+    override fun listarItens(carrinhoId: Long): List<ItemCarrinhoDTO> {
+        val carrinho = carrinhoRepository.findById(carrinhoId)
+            .orElseThrow { NotFoundException("Carrinho não encontrado") }
+
+        return carrinho.itens.map { item ->
+            ItemCarrinhoDTO(
+                id = item.id!!,
+                produto = ProdutoDTO(
+                    id = item.produto.id!!,
+                    nome = item.produto.nome,
+                    unidadeDeMedida = item.produto.unidadeDeMedida,
+                    precoUnitario = item.produto.precoUnitario,
+                    categoriaId = null
+                ),
+                quantidade = item.quantidade,
+                precoUnitario = item.precoUnitario
             )
         }
-        val carrinhoDTO = NewCarrinhoDTO(
-            carrinhoId = carrinho.id!!,
-            produtos = produtos,
-            precoTotal = carrinho.precoTotal
-        )
-        return carrinhoDTO
     }
-
-    private fun obterCarrinhoPorId(carrinhoId: Long): Carrinho {
-        return carrinhoRepository.findById(carrinhoId)
-            .orElseThrow { NotFoundException("Carrinho não encontrado") }
+    // essa função criei só pra auxiliar na de adcionar item, caso o usuario nao tenha um carrinho, ela cria automaticamente um
+    fun criarCarrinhoCasoAdicioneProduto(usuario: Usuario): Carrinho {
+        val carrinho = Carrinho(usuario = usuario)
+        usuario.carrinho = carrinho
+        return carrinhoRepository.save(carrinho)
     }
 }

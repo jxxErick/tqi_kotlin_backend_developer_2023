@@ -1,11 +1,12 @@
 package com.grocery.jumarket.dto
 
 import com.grocery.jumarket.ennumeration.FormaDePagamento
+import java.math.BigDecimal
 
-data class VendaDTO (
-    val idVenda: Long,
-    val valorTotal: Double,
-    val formaDePagamento: FormaDePagamento,
-    val produtos: List<NewProdutoDTO>
-
+data class VendaDTO(
+    val id: Long,
+    val usuario: UsuarioDTO,
+    val valorTotal: BigDecimal,
+    val formaDePagamento: String,
+    val itensVendidos: List<ItemVendidoDTO>
 )
