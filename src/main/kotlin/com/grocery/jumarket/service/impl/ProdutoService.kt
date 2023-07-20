@@ -7,6 +7,7 @@ import com.grocery.jumarket.dto.NewProdutoDTO
 import com.grocery.jumarket.service.exception.NotFoundException
 import com.grocery.jumarket.repositories.CategoriaRepository
 import com.grocery.jumarket.repositories.ProdutoRepository
+import com.grocery.jumarket.service.exception.EstoqueInsuficienteException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -17,24 +18,27 @@ class ProdutoService(
         private val categoriaRepository: CategoriaRepository
 ) : IProdutoService {
     override fun criarProduto(produtoDTO: NewProdutoDTO): ProdutoDTO {
-        // verifica se existe
-        val categoria = categoriaRepository.findById(produtoDTO.categoriaId).orElseThrow { NotFoundException("Categoria não encontrada") }
+        // Verifica se a categoria existe
+        val categoria = categoriaRepository.findById(produtoDTO.categoriaId)
+            .orElseThrow { NotFoundException("Categoria não encontrada") }
 
-        val novoProduto = Produto (
-                nome = produtoDTO.nome,
-                unidadeDeMedida = produtoDTO.unidadeDeMedida,
-                precoUnitario = produtoDTO.precoUnitario,
-                categoria = categoria
+        val novoProduto = Produto(
+            nome = produtoDTO.nome,
+            unidadeDeMedida = produtoDTO.unidadeDeMedida,
+            precoUnitario = produtoDTO.precoUnitario,
+            categoria = categoria,
+            quantidadeEstoque = produtoDTO.quantidadeEstoque // Salvando a quantidade de estoque inicial
         )
 
         val produtoSalvo = produtoRepository.save(novoProduto)
 
         return ProdutoDTO(
-                id = produtoSalvo.id,
-                nome = produtoSalvo.nome,
-                unidadeDeMedida = produtoSalvo.unidadeDeMedida,
-                precoUnitario = produtoSalvo.precoUnitario,
-                categoriaId = produtoSalvo.categoria.id
+            id = produtoSalvo.id,
+            nome = produtoSalvo.nome,
+            unidadeDeMedida = produtoSalvo.unidadeDeMedida,
+            precoUnitario = produtoSalvo.precoUnitario,
+            categoriaId = produtoSalvo.categoria.id,
+            quantidadeEstoque = produtoSalvo.quantidadeEstoque
         )
     }
 
@@ -46,7 +50,8 @@ class ProdutoService(
                     nome = produto.nome,
                     unidadeDeMedida = produto.unidadeDeMedida,
                     precoUnitario = produto.precoUnitario,
-                    categoriaId = produto.categoria.id
+                    categoriaId = produto.categoria.id,
+                quantidadeEstoque = produto.quantidadeEstoque
             )
         }
     }
@@ -60,7 +65,8 @@ class ProdutoService(
                 nome = produto.nome,
                 unidadeDeMedida = produto.unidadeDeMedida,
                 precoUnitario = produto.precoUnitario,
-                categoriaId = produto.categoria.id
+                categoriaId = produto.categoria.id,
+            quantidadeEstoque = produto.quantidadeEstoque
         )
     }
 
@@ -79,7 +85,8 @@ class ProdutoService(
                 nome = produtoAtualizado.nome,
                 unidadeDeMedida = produtoAtualizado.unidadeDeMedida,
                 precoUnitario = produtoAtualizado.precoUnitario,
-                categoriaId = produtoAtualizado.categoria.id
+                categoriaId = produtoAtualizado.categoria.id,
+            quantidadeEstoque = produtoAtualizado.quantidadeEstoque
         )
     }
     override fun listarProdutosPorCategoria(categoriaId: Long): List<ProdutoDTO> {
@@ -94,7 +101,8 @@ class ProdutoService(
                 nome = produto.nome,
                 unidadeDeMedida = produto.unidadeDeMedida,
                 precoUnitario = produto.precoUnitario,
-                categoriaId = produto.categoria.id
+                categoriaId = produto.categoria.id,
+                quantidadeEstoque = produto.quantidadeEstoque
             )
         }
     }
@@ -105,5 +113,45 @@ class ProdutoService(
         }
 
         produtoRepository.deleteById(id)
+    }
+
+   override fun atualizarEstoque(id: Long, quantidade: Long): ProdutoDTO {
+       val produto = produtoRepository.findById(id)
+           .orElseThrow { NotFoundException("Produto não encontrado") }
+
+       val estoqueAtualizado = produto.quantidadeEstoque + quantidade
+       produto.quantidadeEstoque = estoqueAtualizado
+       val produtoAtualizado = produtoRepository.save(produto)
+
+       return ProdutoDTO(
+           id = produtoAtualizado.id,
+           nome = produtoAtualizado.nome,
+           unidadeDeMedida = produtoAtualizado.unidadeDeMedida,
+           precoUnitario = produtoAtualizado.precoUnitario,
+           categoriaId = produtoAtualizado.categoria.id,
+           quantidadeEstoque = produtoAtualizado.quantidadeEstoque
+       )
+   }
+
+    override fun removerItensDoEstoque(id: Long, quantidade: Long): ProdutoDTO {
+        val produto = produtoRepository.findById(id)
+            .orElseThrow { NotFoundException("Produto não encontrado") }
+
+        if (produto.quantidadeEstoque < quantidade) {
+            throw EstoqueInsuficienteException("Não há estoque suficiente para remover a quantidade desejada.")
+        }
+
+        val estoqueAtualizado = produto.quantidadeEstoque - quantidade
+        produto.quantidadeEstoque = estoqueAtualizado
+        val produtoAtualizado = produtoRepository.save(produto)
+
+        return ProdutoDTO(
+            id = produtoAtualizado.id,
+            nome = produtoAtualizado.nome,
+            unidadeDeMedida = produtoAtualizado.unidadeDeMedida,
+            precoUnitario = produtoAtualizado.precoUnitario,
+            categoriaId = produtoAtualizado.categoria.id,
+            quantidadeEstoque = produtoAtualizado.quantidadeEstoque
+        )
     }
 }

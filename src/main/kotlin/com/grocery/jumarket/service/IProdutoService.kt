@@ -10,4 +10,6 @@ interface IProdutoService {
     fun atualizarProduto(id: Long, produtoDTO: NewProdutoDTO): ProdutoDTO
     fun deletarProduto(id: Long)
     fun listarProdutosPorCategoria(categoriaId: Long): List<ProdutoDTO>
+    fun atualizarEstoque(id: Long, quantidade: Long): ProdutoDTO
+    fun removerItensDoEstoque(id: Long, quantidade: Long): ProdutoDTO
 }

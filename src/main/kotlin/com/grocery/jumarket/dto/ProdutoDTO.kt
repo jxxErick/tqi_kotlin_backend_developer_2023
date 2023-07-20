@@ -7,5 +7,6 @@ data class ProdutoDTO(
         val nome: String,
         val unidadeDeMedida: String,
         val precoUnitario: BigDecimal,
-        val categoriaId: Long?
+        val categoriaId: Long?,
+        val quantidadeEstoque: Long?
 )

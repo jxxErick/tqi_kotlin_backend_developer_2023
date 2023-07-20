@@ -1,3 +1,22 @@
+CREATE TABLE categoria
+(
+    id   BIGINT AUTO_INCREMENT NOT NULL,
+    nome VARCHAR(255)          NOT NULL,
+    CONSTRAINT pk_categoria PRIMARY KEY (id)
+);
+
+CREATE TABLE produto
+(
+    id                 BIGINT AUTO_INCREMENT NOT NULL,
+    nome               VARCHAR(255)          NOT NULL,
+    unidade_de_medida  VARCHAR(255)          NOT NULL,
+    preco_unitario     DECIMAL               NOT NULL,
+    categoria_id       BIGINT                NULL,
+    quantidade_estoque BIGINT                NOT NULL,
+    CONSTRAINT pk_produto PRIMARY KEY (id)
+);
+
+
 CREATE TABLE carrinho
 (
     id               BIGINT AUTO_INCREMENT NOT NULL,
@@ -71,3 +90,6 @@ ALTER TABLE carrinho
 ALTER TABLE usuario
     ADD CONSTRAINT FK_USUARIO_ON_CARRINHO FOREIGN KEY (carrinho_id) REFERENCES carrinho (id);
 
+
+ALTER TABLE produto
+    ADD CONSTRAINT FK_PRODUTO_ON_CATEGORIA FOREIGN KEY (categoria_id) REFERENCES categoria (id);

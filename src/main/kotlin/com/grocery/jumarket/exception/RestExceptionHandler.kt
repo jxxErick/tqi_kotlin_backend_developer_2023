@@ -1,6 +1,7 @@
 package com.grocery.jumarket.exception
 
 import com.grocery.jumarket.service.exception.BusinessException
+import com.grocery.jumarket.service.exception.EstoqueInsuficienteException
 import com.grocery.jumarket.service.exception.NotFoundException
 import org.springframework.dao.DataAccessException
 import org.springframework.http.HttpStatus
@@ -70,6 +71,19 @@ class RestExceptionHandler {
         )
 
         return ResponseEntity(exceptionDetails, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(EstoqueInsuficienteException::class)
+    fun handleEstoqueInsuficienteException(ex: EstoqueInsuficienteException): ResponseEntity<ExceptionDetails> {
+        val exceptionDetails = ExceptionDetails(
+            title = "Estoque Insuficiente",
+            timestamp = LocalDateTime.now(),
+            status = HttpStatus.BAD_REQUEST.value(),
+            exception = ex.javaClass.toString(),
+            details = mutableMapOf("message" to ex.message)
+        )
+
+        return ResponseEntity(exceptionDetails, HttpStatus.BAD_REQUEST)
     }
 
 }

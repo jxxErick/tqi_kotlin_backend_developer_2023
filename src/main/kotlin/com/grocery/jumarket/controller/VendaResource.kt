@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.*
 class VendaResource(
     private val vendaService: VendaService
 ) {
-    // finaliza uma venda
+
     @PostMapping("/finalizar")
     fun finalizarVenda(@RequestBody finalizarVendaDTO: FinalizarVendaDTO): ResponseEntity<VendaDTO> {
-        val vendaDTO = vendaService.finalizarVenda(finalizarVendaDTO)
-        return ResponseEntity(vendaDTO, HttpStatus.CREATED)
+        val vendaFinalizada = vendaService.finalizarVenda(finalizarVendaDTO)
+        return ResponseEntity(vendaFinalizada, HttpStatus.CREATED)
     }
-    // lista as vendas
+
     @GetMapping
     fun listarVendas(): ResponseEntity<List<VendaDTO>> {
         val vendas = vendaService.listarVendas()

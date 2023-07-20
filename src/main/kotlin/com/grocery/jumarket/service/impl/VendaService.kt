@@ -11,6 +11,7 @@ import com.grocery.jumarket.repositories.UsuarioRepository
 import com.grocery.jumarket.repositories.VendaRepository
 import com.grocery.jumarket.service.IVendaService
 import com.grocery.jumarket.service.exception.BusinessException
+import com.grocery.jumarket.service.exception.EstoqueInsuficienteException
 import com.grocery.jumarket.service.exception.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -26,41 +27,52 @@ import java.math.BigDecimal
     ) : IVendaService {
         //finaliza venda passando forma de pagamento, usuarioId e os itens
         override fun finalizarVenda(finalizarVendaDTO: FinalizarVendaDTO): VendaDTO {
-            //verifica se o usuario existe
+            // Verifica se o usuário existe
             val usuario = usuarioRepository.findById(finalizarVendaDTO.usuarioId)
                 .orElseThrow { NotFoundException("Usuário não encontrado") }
+
+            val carrinhoDoUsuario = usuario.carrinho
+                ?: throw NotFoundException("Carrinho do usuário não encontrado")
+
+            // Verifica se o carrinho do usuário possui itens
+            if (carrinhoDoUsuario.itens.isEmpty()) {
+                throw BusinessException("Carrinho Vazio.")
+            }
 
             val venda = Venda(
                 usuario = usuario,
                 valorTotal = BigDecimal.ZERO,
                 formaDePagamento = finalizarVendaDTO.formaDePagamento
             )
-            //verifica se os itens existe e adiciona nos itens vendidos
-            for (itemDTO in finalizarVendaDTO.itensVendidos) {
-                val produto = produtoRepository.findById(itemDTO.produtoId)
-                    .orElseThrow { NotFoundException("Produto não encontrado") }
+
+            // Percorre os itens do carrinho e adiciona na venda
+            for (itemCarrinho in carrinhoDoUsuario.itens) {
+                val produto = itemCarrinho.produto
+
+                if (produto.quantidadeEstoque < itemCarrinho.quantidade) {
+                    throw EstoqueInsuficienteException("Não há estoque suficiente para concluir a venda.")
+                }
 
                 val itemVendido = ItemVendido(
                     produto = produto,
-                    quantidade = itemDTO.quantidade,
+                    quantidade = itemCarrinho.quantidade,
                     precoUnitario = produto.precoUnitario
                 )
 
                 venda.adicionarItemVendido(itemVendido)
                 venda.valorTotal += itemVendido.precoUnitario.multiply(BigDecimal.valueOf(itemVendido.quantidade))
+
+                produto.quantidadeEstoque -= itemCarrinho.quantidade
             }
 
             val vendaSalva = vendaRepository.save(venda)
 
-            // deleta o carrinho do usuario assim que for vendido
-            val carrinhoDelete = usuario.carrinho
-            if (carrinhoDelete != null) {
-                carrinhoRepository.delete(carrinhoDelete)
-            }
+            // Limpa o carrinho do usuário
+            carrinhoDoUsuario.itens.clear()
+            carrinhoRepository.save(carrinhoDoUsuario)
 
             return vendaSalva.toDTO()
         }
-
         private fun Venda.toDTO(): VendaDTO {
             val usuarioDTO = UsuarioDTO(
                 id = usuario.id,
@@ -89,4 +101,7 @@ import java.math.BigDecimal
             val vendas = vendaRepository.findAll()
             return vendas.map { venda -> venda.toDTO() }
         }
+
+
+
     }

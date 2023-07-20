@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/categorias")
 class CategoriaResource(private val categoriaService: CategoriaService) {
 
-    // Cria uma categoria
+
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     fun criarCategoria(@RequestBody categoriaDTO: CategoriaDTO): ResponseEntity<CategoriaDTO> {
@@ -20,7 +20,7 @@ class CategoriaResource(private val categoriaService: CategoriaService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(novaCategoria)
     }
 
-    // Lista elas
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     fun listarCategorias(): ResponseEntity<List<CategoriaDTO>> {
@@ -28,7 +28,7 @@ class CategoriaResource(private val categoriaService: CategoriaService) {
         return ResponseEntity.ok(categorias)
     }
 
-    // pega uma pela id
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun getCategoriaPorId(@PathVariable id: Long): ResponseEntity<CategoriaDTO> {
@@ -36,14 +36,14 @@ class CategoriaResource(private val categoriaService: CategoriaService) {
         return ResponseEntity.ok(categoria)
     }
 
-    // deleta passando id
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deletarCategoria(@PathVariable id: Long) {
         categoriaService.deletarCategoria(id)
     }
 
-    // edita ela passando o id
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun editarCategoria(@PathVariable id: Long, @RequestBody newCategoriaDTO: NewCategoriaDTO): Categoria {

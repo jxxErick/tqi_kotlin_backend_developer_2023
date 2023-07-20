@@ -11,6 +11,7 @@ import com.grocery.jumarket.repositories.UsuarioRepository
 import com.grocery.jumarket.service.ICarrinhoService
 
 import com.grocery.jumarket.service.exception.BusinessException
+import com.grocery.jumarket.service.exception.EstoqueInsuficienteException
 import com.grocery.jumarket.service.exception.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -25,15 +26,23 @@ class CarrinhoService (
 
     //Adiciona item ao carrinho do usuario passando a id dele
     override fun adicionarItem(carrinhoDTO: CarrinhoDTO) {
-        // Verifica se o usuario existe
+        // Verifica se o usuário existe
         val usuario = usuarioRepository.findById(carrinhoDTO.usuarioId)
             .orElseThrow { NotFoundException("Usuário não encontrado") }
-        // buscar o carrinho do usuario, caso ele nao tenha, cria um
-        val carrinho = usuario.carrinho ?: criarCarrinhoCasoAdicioneProduto(usuario)
-        // verifica se o produto existe
+
+        // Verifica se o produto existe
         val produto = produtoRepository.findById(carrinhoDTO.produtoId)
             .orElseThrow { NotFoundException("Produto não encontrado") }
-        // adiciona o produto ao carrinho
+
+        // Verifica se o produto possui estoque suficiente
+        if (produto.quantidadeEstoque < carrinhoDTO.quantidade) {
+            throw EstoqueInsuficienteException("Não há estoque suficiente para adicionar o produto ao carrinho.")
+        }
+
+        // Buscar o carrinho do usuário, caso ele não tenha, cria um
+        val carrinho = usuario.carrinho ?: criarCarrinhoCasoAdicioneProduto(usuario)
+
+        // Adiciona o produto ao carrinho
         carrinho.adicionarItem(ItemCarrinho(produto, carrinhoDTO.quantidade, produto.precoUnitario))
         carrinhoRepository.save(carrinho)
     }
@@ -65,7 +74,8 @@ class CarrinhoService (
                     nome = item.produto.nome,
                     unidadeDeMedida = item.produto.unidadeDeMedida,
                     precoUnitario = item.produto.precoUnitario,
-                    categoriaId = null
+                    categoriaId = null,
+                    quantidadeEstoque = null
                 ),
                 quantidade = item.quantidade,
                 precoUnitario = item.precoUnitario

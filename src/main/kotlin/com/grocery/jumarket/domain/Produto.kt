@@ -20,5 +20,7 @@ data class Produto(
 
         @OneToMany(mappedBy = "produto", cascade = [CascadeType.ALL], orphanRemoval = true)
 
-        val itensCarrinho: MutableList<ItemCarrinho> = mutableListOf()
+        val itensCarrinho: MutableList<ItemCarrinho> = mutableListOf(),
+
+        @Column(nullable = false) var quantidadeEstoque: Long = 0
 )

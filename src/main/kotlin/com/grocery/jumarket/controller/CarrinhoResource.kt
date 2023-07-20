@@ -14,28 +14,22 @@ import org.springframework.web.bind.annotation.*
 class CarrinhoResource(
     private val carrinhoService: CarrinhoService
 ) {
-    // add itens passando a id do usuario
+
     @PostMapping("/add/{usuarioId}")
-    fun adicionarItem(
-        @PathVariable usuarioId: Long,
-        @RequestBody carrinhoDTO: CarrinhoDTO
-    ): ResponseEntity<Unit> {
+    fun adicionarItem(@PathVariable usuarioId: Long, @RequestBody carrinhoDTO: CarrinhoDTO): ResponseEntity<Unit> {
         carrinhoDTO.usuarioId = usuarioId
         carrinhoService.adicionarItem(carrinhoDTO)
         return ResponseEntity(HttpStatus.CREATED)
     }
 
-    // remove itens especificos do carrinho pela id
+
     @DeleteMapping("/{carrinhoId}/produtos/{produtoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun removerItemDoCarrinho(
-        @PathVariable carrinhoId: Long,
-        @PathVariable produtoId: Long
-    ) {
+    fun removerItemDoCarrinho(@PathVariable carrinhoId: Long,@PathVariable produtoId: Long) {
         carrinhoService.removerItem(carrinhoId, produtoId)
     }
 
-    // lista o carrinho
+
     @GetMapping("/{carrinhoId}")
     @ResponseStatus(HttpStatus.OK)
     fun listarItensDoCarrinho(@PathVariable carrinhoId: Long): List<ItemCarrinhoDTO> {
