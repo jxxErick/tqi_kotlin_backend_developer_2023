@@ -10,5 +10,5 @@ interface ICategoriaService {
     fun listarCategorias(): List<CategoriaDTO>
     fun deletarCategoria(id: Long)
     fun editarCategoria(cateoriaId: Long, newCategoriaDTO: NewCategoriaDTO): Categoria
-    fun getCategoriaPorId(id: Long): CategoriaDTO
+    fun buscarCategoriaPorId(id: Long): CategoriaDTO
 }

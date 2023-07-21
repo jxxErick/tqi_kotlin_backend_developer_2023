@@ -41,7 +41,7 @@ class CategoriaService(private val categoriaRepository: CategoriaRepository) : I
         return Categoria(categoriaAtualizada.id, categoriaAtualizada.nome)
     }
 
-    override fun getCategoriaPorId(id: Long): CategoriaDTO {
+    override fun buscarCategoriaPorId(id: Long): CategoriaDTO {
         //verifica se existe
         val categoria = categoriaRepository.findById(id)
                 .orElseThrow { NotFoundException("Categoria não encontrada") }

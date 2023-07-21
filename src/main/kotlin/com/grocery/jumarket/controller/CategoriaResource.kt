@@ -32,7 +32,7 @@ class CategoriaResource(private val categoriaService: CategoriaService) {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun getCategoriaPorId(@PathVariable id: Long): ResponseEntity<CategoriaDTO> {
-        val categoria = categoriaService.getCategoriaPorId(id)
+        val categoria = categoriaService.buscarCategoriaPorId(id)
         return ResponseEntity.ok(categoria)
     }
 
