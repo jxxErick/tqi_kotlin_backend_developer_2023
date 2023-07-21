@@ -1,6 +1,8 @@
 package com.grocery.jumarket.dto
 
+import jakarta.validation.constraints.NotNull
+
 data class CategoriaDTO(
         var id: Long?,
-        var nome: String
+        @field:NotNull(message = "nao pode estar vazio")  var nome: String
 )

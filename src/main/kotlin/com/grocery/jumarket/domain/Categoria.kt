@@ -8,9 +8,7 @@ import org.hibernate.annotations.Cascade
 data class Categoria (
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long? = null,
-
     @Column(nullable = false) @NotNull(message = "O nome é obrigatório")var nome: String,
-
     @OneToMany(mappedBy = "categoria", cascade = [CascadeType.REMOVE]) val produtos: List<Produto> = mutableListOf()
 
 )
