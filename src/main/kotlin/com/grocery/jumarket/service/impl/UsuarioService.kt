@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
-class UsuarioService(private val usuarioRepository: UsuarioRepository, private val carrinhoRepository: CarrinhoRepository) : IUsuarioService {
+class UsuarioService(private val usuarioRepository: UsuarioRepository) : IUsuarioService {
     override fun criarUsuario(usuarioDTO: NewUsuarioDTO): UsuarioDTO {
         val emailExistente = usuarioRepository.findByEmail(usuarioDTO.email)
         if (emailExistente != null) {
@@ -28,7 +28,7 @@ class UsuarioService(private val usuarioRepository: UsuarioRepository, private v
             email = usuarioDTO.email,
             nome = usuarioDTO.nome,
             cpf = usuarioDTO.cpf,
-           carrinho = null
+            carrinho = null
         )
 
         val usuarioSalvo = usuarioRepository.save(novoUsuario)
