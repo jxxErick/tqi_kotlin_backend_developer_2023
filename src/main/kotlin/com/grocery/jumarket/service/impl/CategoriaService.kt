@@ -26,14 +26,12 @@ class CategoriaService(private val categoriaRepository: CategoriaRepository) : I
     override fun deletarCategoria(categoriaId: Long) {
         val categoriaExistente = categoriaRepository.findById(categoriaId)
                 .orElseThrow { NotFoundException("Categoria não encontrada") }
-
         categoriaRepository.deleteById(categoriaExistente.id!!)
     }
 
     override fun editarCategoria(categoriaId: Long, newCategoriaDTO: NewCategoriaDTO): Categoria {
         val categoriaExistente = categoriaRepository.findById(categoriaId)
                 .orElseThrow { NotFoundException("Categoria não encontrada") }
-
         categoriaExistente.nome = newCategoriaDTO.nome
         val categoriaAtualizada = categoriaRepository.save(categoriaExistente)
         return Categoria(categoriaAtualizada.id, categoriaAtualizada.nome)
@@ -42,7 +40,6 @@ class CategoriaService(private val categoriaRepository: CategoriaRepository) : I
     override fun buscarCategoriaPorId(id: Long): CategoriaDTO {
         val categoria = categoriaRepository.findById(id)
                 .orElseThrow { NotFoundException("Categoria não encontrada") }
-
         return CategoriaDTO(categoria.id, categoria.nome)
     }
 }
