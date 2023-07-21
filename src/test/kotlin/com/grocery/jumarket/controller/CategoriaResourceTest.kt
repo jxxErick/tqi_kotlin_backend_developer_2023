@@ -1,4 +1,5 @@
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.grocery.jumarket.JuMarketApplication
 import com.grocery.jumarket.controller.CategoriaResource
 import com.grocery.jumarket.domain.Categoria
 import com.grocery.jumarket.dto.CategoriaDTO
@@ -19,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
-@SpringBootTest
+@SpringBootTest(classes = [JuMarketApplication::class])
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @ContextConfiguration
@@ -38,6 +39,7 @@ class CategoriaResourceTest {
 
     @Test
     fun `deve criar uma nova categoria`() {
+
         val categoriaDTO = CategoriaDTO(id = 1L, nome = "Eletrônicos")
 
         every { categoriaService.criarCategoria(any()) } returns categoriaDTO
@@ -51,6 +53,7 @@ class CategoriaResourceTest {
 
     @Test
     fun `deve listar todas as categorias`() {
+
         val categorias = listOf(
             CategoriaDTO(id = 1L, nome = "Eletrônicos"),
             CategoriaDTO(id = 2L, nome = "Roupas"),
@@ -66,6 +69,7 @@ class CategoriaResourceTest {
 
     @Test
     fun `deve buscar uma categoria por id`() {
+
         val categoriaDTO = CategoriaDTO(id = 1L, nome = "Eletrônicos")
 
         every { categoriaService.buscarCategoriaPorId(1L) } returns categoriaDTO
@@ -79,6 +83,7 @@ class CategoriaResourceTest {
 
     @Test
     fun `deve editar uma categoria`() {
+
         val categoriaDTO = CategoriaDTO(id = 1L, nome = "Eletrônicos Atualizados")
         val newCategoriaDTO = NewCategoriaDTO(nome = "Eletrônicos Atualizados")
         val categoriaAtualizada = Categoria(id = 1L, nome = "Eletrônicos Atualizados")
@@ -94,8 +99,9 @@ class CategoriaResourceTest {
 
     @Test
     fun `deve deletar uma categoria`() {
+
         val idCategoria = 1L
-        
+
         every { categoriaService.deletarCategoria(idCategoria) } just Runs
 
         mockMvc.perform(delete("/api/categorias/$idCategoria")
@@ -104,4 +110,3 @@ class CategoriaResourceTest {
     }
 
 }
-

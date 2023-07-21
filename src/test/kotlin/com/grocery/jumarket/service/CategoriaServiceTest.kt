@@ -26,6 +26,7 @@ class CategoriaServiceTest {
 
     @Test
     fun `deve criar uma nova categoria`() {
+
         val categoriaFake: CategoriaDTO = construirCategoria()
         val categoriaCriada: Categoria = Categoria(id = categoriaFake.id, nome = categoriaFake.nome)
 
@@ -41,6 +42,7 @@ class CategoriaServiceTest {
 
     @Test
     fun `deve listar todas as categorias`() {
+
         val categoriasFake = listOf(
             Categoria(id = 1L, nome = "Eletrônicos"),
             Categoria(id = 2L, nome = "Roupas"),
@@ -59,6 +61,7 @@ class CategoriaServiceTest {
 
     @Test
     fun `deve buscar uma categoria passando a id`() {
+
         val idFake: Long = Random().nextLong()
         val categoriaFake: CategoriaDTO = construirCategoria(id = idFake)
         every { categoriaRepository.findById(idFake) } returns Optional.of(Categoria(id = categoriaFake.id,
@@ -74,6 +77,7 @@ class CategoriaServiceTest {
     }
     @Test
     fun `deve lançar uma notFoundExcpetion caso a id seja invalida `(){
+
         val idFake: Long = Random().nextLong()
         every { categoriaRepository.findById(idFake) } returns Optional.empty()
 
@@ -99,6 +103,7 @@ class CategoriaServiceTest {
     }
     @Test
     fun `deve editar uma categoria existente`() {
+
         val categoriaExistente = Categoria(id = 1L, nome = "Eletrônicos")
         every { categoriaRepository.findById(categoriaExistente.id!!) } returns Optional.of(categoriaExistente)
 
