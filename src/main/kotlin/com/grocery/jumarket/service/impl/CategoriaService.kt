@@ -24,7 +24,6 @@ class CategoriaService(private val categoriaRepository: CategoriaRepository) : I
     }
 
     override fun deletarCategoria(categoriaId: Long) {
-        //verifica se existe
         val categoriaExistente = categoriaRepository.findById(categoriaId)
                 .orElseThrow { NotFoundException("Categoria não encontrada") }
 
@@ -32,7 +31,6 @@ class CategoriaService(private val categoriaRepository: CategoriaRepository) : I
     }
 
     override fun editarCategoria(categoriaId: Long, newCategoriaDTO: NewCategoriaDTO): Categoria {
-        //verifica se existe
         val categoriaExistente = categoriaRepository.findById(categoriaId)
                 .orElseThrow { NotFoundException("Categoria não encontrada") }
 
@@ -42,7 +40,6 @@ class CategoriaService(private val categoriaRepository: CategoriaRepository) : I
     }
 
     override fun buscarCategoriaPorId(id: Long): CategoriaDTO {
-        //verifica se existe
         val categoria = categoriaRepository.findById(id)
                 .orElseThrow { NotFoundException("Categoria não encontrada") }
 
