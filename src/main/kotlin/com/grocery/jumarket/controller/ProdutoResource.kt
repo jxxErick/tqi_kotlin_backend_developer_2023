@@ -1,7 +1,7 @@
 package com.grocery.jumarket.controller
 
-import com.grocery.jumarket.dto.ProdutoDTO
-import com.grocery.jumarket.dto.NewProdutoDTO
+import com.grocery.jumarket.dto.request.ProdutoDTO
+import com.grocery.jumarket.dto.view.ProdutoViewDTO
 import com.grocery.jumarket.service.ProdutoService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,60 +13,59 @@ class ProdutoResource(private val produtoService: ProdutoService) {
 
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    fun criarProduto(@RequestBody produtoDTO: NewProdutoDTO): ResponseEntity<ProdutoDTO> {
-        val novoProduto = produtoService.criarProduto(produtoDTO)
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoProduto)
+    @ResponseStatus(HttpStatus.CREATED)
+    fun salvarProduto(@RequestBody produtoDTO: ProdutoDTO): ResponseEntity<ProdutoViewDTO> {
+        val produto = produtoService.criarProduto(produtoDTO.toProduto())
+        return ResponseEntity.status(HttpStatus.CREATED).body(ProdutoViewDTO(produto))
     }
-
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    fun listarProdutos(): ResponseEntity<List<ProdutoDTO>> {
+    fun listarProdutos(): ResponseEntity<List<ProdutoViewDTO>> {
         val produtos = produtoService.listarProdutos()
-        return ResponseEntity.ok(produtos)
+        val produtosDTO = produtos.map { ProdutoViewDTO(it) }
+        return ResponseEntity.ok(produtosDTO)
     }
-
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun getProdutoPorId(@PathVariable id: Long): ResponseEntity<ProdutoDTO> {
+    fun buscarProdutoPorId(@PathVariable id: Long): ResponseEntity<ProdutoViewDTO> {
         val produto = produtoService.getProdutoPorId(id)
-        return ResponseEntity.ok(produto)
+        return ResponseEntity.ok(ProdutoViewDTO(produto))
     }
 
-
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun atualizarProduto(@PathVariable id: Long, @RequestBody produtoDTO: NewProdutoDTO): ResponseEntity<ProdutoDTO> {
-        val produtoAtualizado = produtoService.atualizarProduto(id, produtoDTO)
-        return ResponseEntity.ok(produtoAtualizado)
+    fun atualizarProduto(@PathVariable id: Long, @RequestBody produtoDTO: ProdutoDTO): ResponseEntity<ProdutoViewDTO> {
+        val produtoExistente = produtoService.getProdutoPorId(id)
+        val produtoAtualizado = produtoDTO.toProduto().copy(id = id)
+        val produtoAtualizadoResultado = produtoService.atualizarProduto(produtoAtualizado)
+        return ResponseEntity.ok(ProdutoViewDTO(produtoAtualizadoResultado))
+    }
+    @GetMapping("/categoria/{categoriaId}")
+    @ResponseStatus(HttpStatus.OK)
+    fun listarProdutosPorCategoria(@PathVariable categoriaId: Long): ResponseEntity<List<ProdutoViewDTO>> {
+        val produtos = produtoService.listarProdutosPorCategoria(categoriaId)
+        val produtosDTO = produtos.map { ProdutoViewDTO(it) }
+        return ResponseEntity.ok(produtosDTO)
     }
 
+    @PostMapping("/{id}/add-estoque")
+    @ResponseStatus(HttpStatus.OK)
+    fun adicionarEstoque(@PathVariable id: Long, @RequestBody quantidade: Long): ResponseEntity<ProdutoViewDTO> {
+        val produtoAtualizado = produtoService.atualizarEstoque(id, quantidade)
+        return ResponseEntity.ok(ProdutoViewDTO(produtoAtualizado))
+    }
+
+    @PostMapping("/{id}/remover-stoque")
+    @ResponseStatus(HttpStatus.OK)
+    fun removerEstoque(@PathVariable id: Long, @RequestBody quantidade: Long): ResponseEntity<ProdutoViewDTO> {
+        val produtoAtualizado = produtoService.removerItensDoEstoque(id, quantidade)
+        return ResponseEntity.ok(ProdutoViewDTO(produtoAtualizado))
+    }
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deletarProduto(@PathVariable id: Long) {
         produtoService.deletarProduto(id)
     }
-
-    @GetMapping("/categoria/{categoriaId}")
-    @ResponseStatus(HttpStatus.OK)
-    fun listarProdutosPorCategoria(@PathVariable categoriaId: Long): ResponseEntity<List<ProdutoDTO>> {
-        val produtos = produtoService.listarProdutosPorCategoria(categoriaId)
-        return ResponseEntity.ok(produtos)
-    }
-    @PutMapping("/{id}/estoque/add")
-    @ResponseStatus(HttpStatus.OK)
-    fun atualizarEstoque(@PathVariable id: Long, @RequestBody quantidade: Long): ResponseEntity<ProdutoDTO> {
-        val produtoAtualizado = produtoService.atualizarEstoque(id, quantidade)
-        return ResponseEntity.ok(produtoAtualizado)
-    }
-
-    @PutMapping("/{id}/estoque/remover")
-    @ResponseStatus(HttpStatus.OK)
-    fun removerItensDoEstoque(@PathVariable id: Long, @RequestParam quantidade: Long): ResponseEntity<ProdutoDTO> {
-        val produtoAtualizado = produtoService.removerItensDoEstoque(id, quantidade)
-        return ResponseEntity.ok(produtoAtualizado)
-    }
 }
-

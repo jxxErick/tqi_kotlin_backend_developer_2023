@@ -1,9 +1,7 @@
-package com.grocery.jumarket.controller
+/*package com.grocery.jumarket.controller
 
-import com.grocery.jumarket.dto.CarrinhoDTO
-import com.grocery.jumarket.dto.ItemCarrinhoDTO
-import com.grocery.jumarket.dto.NewCarrinhoDTO
-import com.grocery.jumarket.dto.ProdutoDTO
+import com.grocery.jumarket.dto.request.CarrinhoDTO
+import com.grocery.jumarket.dto.request.ItemCarrinhoDTO
 import com.grocery.jumarket.service.impl.CarrinhoService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -42,3 +40,4 @@ class CarrinhoResource(
         return ResponseEntity.noContent().build()
     }
 }
+*/

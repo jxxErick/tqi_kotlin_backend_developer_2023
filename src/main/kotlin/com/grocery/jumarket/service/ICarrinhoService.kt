@@ -1,11 +1,8 @@
 package com.grocery.jumarket.service
 
 
-import com.grocery.jumarket.domain.Carrinho
-import com.grocery.jumarket.dto.CarrinhoDTO
-import com.grocery.jumarket.dto.ItemCarrinhoDTO
-import com.grocery.jumarket.dto.NewCarrinhoDTO
-import com.grocery.jumarket.dto.ProdutoDTO
+import com.grocery.jumarket.dto.request.CarrinhoDTO
+import com.grocery.jumarket.dto.request.ItemCarrinhoDTO
 
 interface ICarrinhoService {
     fun adicionarItem(carrinhoDTO: CarrinhoDTO)

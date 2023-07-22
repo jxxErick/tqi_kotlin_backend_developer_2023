@@ -1,14 +1,14 @@
 package com.grocery.jumarket.service
 
 import com.grocery.jumarket.domain.Categoria
-import com.grocery.jumarket.dto.CategoriaDTO
-import com.grocery.jumarket.dto.NewCategoriaDTO
+import com.grocery.jumarket.dto.request.CategoriaDTO
+import com.grocery.jumarket.dto.request.NewCategoriaDTO
 
 
 interface ICategoriaService {
-    fun criarCategoria(categoriaDTO: CategoriaDTO): CategoriaDTO
-    fun listarCategorias(): List<CategoriaDTO>
-    fun deletarCategoria(id: Long)
-    fun editarCategoria(cateoriaId: Long, newCategoriaDTO: NewCategoriaDTO): Categoria
-    fun buscarCategoriaPorId(id: Long): CategoriaDTO
+    fun criarCategoria(categoria: Categoria): Categoria
+    fun listarCategorias(): List<Categoria>
+    fun deletarCategoria(categoriaId: Long)
+    fun editarCategoria(categoriaId: Long, categoria: Categoria): Categoria
+    fun buscarCategoriaPorId(id: Long): Categoria
 }

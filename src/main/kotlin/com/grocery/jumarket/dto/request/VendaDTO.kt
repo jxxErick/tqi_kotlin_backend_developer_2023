@@ -1,6 +1,7 @@
-package com.grocery.jumarket.dto
+package com.grocery.jumarket.dto.request
 
-import com.grocery.jumarket.ennumeration.FormaDePagamento
+import com.grocery.jumarket.dto.request.ItemVendidoDTO
+import com.grocery.jumarket.dto.request.UsuarioDTO
 import java.math.BigDecimal
 
 data class VendaDTO(

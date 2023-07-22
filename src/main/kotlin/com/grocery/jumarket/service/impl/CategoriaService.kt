@@ -1,8 +1,8 @@
 package com.grocery.jumarket.service.impl
 
 import com.grocery.jumarket.domain.Categoria
-import com.grocery.jumarket.dto.CategoriaDTO
-import com.grocery.jumarket.dto.NewCategoriaDTO
+import com.grocery.jumarket.dto.request.CategoriaDTO
+import com.grocery.jumarket.dto.request.NewCategoriaDTO
 import com.grocery.jumarket.service.exception.NotFoundException
 import com.grocery.jumarket.repositories.CategoriaRepository
 import com.grocery.jumarket.service.ICategoriaService
@@ -12,34 +12,32 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class CategoriaService(private val categoriaRepository: CategoriaRepository) : ICategoriaService {
-    override fun criarCategoria(categoriaDTO: CategoriaDTO): CategoriaDTO {
-        val categoria = Categoria(nome = categoriaDTO.nome)
-        val novaCategoria = categoriaRepository.save(categoria)
-        return CategoriaDTO(novaCategoria.id, novaCategoria.nome)
+
+    override fun criarCategoria(categoria: Categoria): Categoria {
+        return categoriaRepository.save(categoria)
     }
 
-    override fun listarCategorias(): List<CategoriaDTO> {
-        val categorias = categoriaRepository.findAll()
-        return categorias.map { CategoriaDTO(it.id, it.nome) }
+    override fun listarCategorias(): List<Categoria> {
+        return categoriaRepository.findAll()
     }
 
     override fun deletarCategoria(categoriaId: Long) {
         val categoriaExistente = categoriaRepository.findById(categoriaId)
-                .orElseThrow { NotFoundException("Categoria não encontrada") }
-        categoriaRepository.deleteById(categoriaExistente.id!!)
+            .orElseThrow { NotFoundException("Categoria não encontrada") }
+        categoriaRepository.delete(categoriaExistente)
     }
 
-    override fun editarCategoria(categoriaId: Long, newCategoriaDTO: NewCategoriaDTO): Categoria {
+    override fun editarCategoria(categoriaId: Long, categoria: Categoria): Categoria {
         val categoriaExistente = categoriaRepository.findById(categoriaId)
-                .orElseThrow { NotFoundException("Categoria não encontrada") }
-        categoriaExistente.nome = newCategoriaDTO.nome
-        val categoriaAtualizada = categoriaRepository.save(categoriaExistente)
-        return Categoria(categoriaAtualizada.id, categoriaAtualizada.nome)
+            .orElseThrow { NotFoundException("Categoria não encontrada") }
+
+        categoriaExistente.nome = categoria.nome
+
+        return categoriaRepository.save(categoriaExistente)
     }
 
-    override fun buscarCategoriaPorId(id: Long): CategoriaDTO {
-        val categoria = categoriaRepository.findById(id)
-                .orElseThrow { NotFoundException("Categoria não encontrada") }
-        return CategoriaDTO(categoria.id, categoria.nome)
+    override fun buscarCategoriaPorId(id: Long): Categoria {
+        return categoriaRepository.findById(id)
+            .orElseThrow { NotFoundException("Categoria não encontrada") }
     }
 }

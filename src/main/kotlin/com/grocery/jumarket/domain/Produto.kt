@@ -16,7 +16,7 @@ data class Produto(
 
         @Column(nullable = false) @NotNull(message = "O preco nao pode estar vazio")var precoUnitario: BigDecimal,
 
-        @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "categoria_id") val categoria: Categoria,
+        @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "categoria_id") var categoria: Categoria,
 
         @OneToMany(mappedBy = "produto", cascade = [CascadeType.ALL], orphanRemoval = true)
 

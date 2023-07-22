@@ -1,8 +1,5 @@
 package com.grocery.jumarket.service.impl
 import com.grocery.jumarket.domain.Usuario
-import com.grocery.jumarket.dto.NewUsuarioDTO
-import com.grocery.jumarket.dto.UsuarioDTO
-import com.grocery.jumarket.repositories.CarrinhoRepository
 import com.grocery.jumarket.service.exception.BusinessException
 import com.grocery.jumarket.repositories.UsuarioRepository
 import com.grocery.jumarket.service.IUsuarioService
@@ -13,89 +10,42 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class UsuarioService(private val usuarioRepository: UsuarioRepository) : IUsuarioService {
-    override fun criarUsuario(usuarioDTO: NewUsuarioDTO): UsuarioDTO {
-        val emailExistente = usuarioRepository.findByEmail(usuarioDTO.email)
+    override fun criarUsuario(usuario: Usuario): Usuario {
+        val emailExistente = usuarioRepository.findByEmail(usuario.email)
         if (emailExistente != null) {
             throw BusinessException("E-mail já está em uso")
         }
 
-        val cpfExistente = usuarioRepository.findByCpf(usuarioDTO.cpf)
+        val cpfExistente = usuarioRepository.findByCpf(usuario.cpf)
         if (cpfExistente != null) {
             throw BusinessException("CPF já está cadastrado")
         }
 
-        val novoUsuario = Usuario(
-            email = usuarioDTO.email,
-            nome = usuarioDTO.nome,
-            cpf = usuarioDTO.cpf,
-            carrinho = null
-        )
-
-        val usuarioSalvo = usuarioRepository.save(novoUsuario)
-
-
-        return UsuarioDTO(
-            id = usuarioSalvo.id,
-            email = usuarioSalvo.email,
-            nome = usuarioSalvo.nome,
-            cpf = usuarioSalvo.cpf
-        )
+        return usuarioRepository.save(usuario)
     }
 
-
-    override fun listarUsuarios(): List<UsuarioDTO> {
-        val usuarios = usuarioRepository.findAll()
-        return usuarios.map { usuario ->
-            UsuarioDTO(
-                id = usuario.id,
-                email = usuario.email,
-                nome = usuario.nome,
-                cpf = usuario.cpf
-            )
-        }
+    override fun listarUsuarios(): List<Usuario> {
+        return usuarioRepository.findAll()
     }
 
-    override fun getUsuarioPorId(id: Long): UsuarioDTO {
-        val usuario = usuarioRepository.findById(id)
+    override fun getUsuarioPorId(id: Long): Usuario {
+        return usuarioRepository.findById(id)
+            .orElseThrow { NotFoundException("Usuário não encontrado") }
+    }
+
+    override fun getUsuarioPorEmail(email: String): Usuario? {
+        return usuarioRepository.findByEmail(email)
+    }
+
+    override fun atualizarUsuario(usuario: Usuario): Usuario? {
+        val usuarioExistente = usuarioRepository.findById(usuario.id)
             .orElseThrow { NotFoundException("Usuário não encontrado") }
 
-        return UsuarioDTO(
-            id = usuario.id,
-            email = usuario.email,
-            nome = usuario.nome,
-            cpf = usuario.cpf
-        )
+        usuarioExistente.email = usuario.email
+        usuarioExistente.nome = usuario.nome
+        usuarioExistente.cpf = usuario.cpf
+
+        return usuarioRepository.save(usuarioExistente)
     }
-
-    override fun getUsuarioPorEmail(email: String): UsuarioDTO? {
-        val usuario = usuarioRepository.findByEmail(email)
-        return usuario?.let {
-            UsuarioDTO(
-                id = it.id,
-                email = it.email,
-                nome = it.nome,
-                cpf = it.cpf
-            )
-        }
-    }
-
-    override fun atualizarUsuario(id: Long, usuarioDTO: NewUsuarioDTO): UsuarioDTO {
-        val usuarioExistente = usuarioRepository.findById(id)
-            .orElseThrow { NotFoundException("Usuário não encontrado") }
-
-        usuarioExistente.email = usuarioDTO.email
-        usuarioExistente.nome = usuarioDTO.nome
-        usuarioExistente.cpf = usuarioDTO.cpf
-
-        val usuarioAtualizado = usuarioRepository.save(usuarioExistente)
-
-        return UsuarioDTO(
-            id = usuarioAtualizado.id,
-            email = usuarioAtualizado.email,
-            nome = usuarioAtualizado.nome,
-            cpf = usuarioAtualizado.cpf
-        )
-    }
-
 
 }

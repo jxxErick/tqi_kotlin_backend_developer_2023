@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull
 @Entity
 data class Usuario(
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long? = null,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long,
     @Column(nullable = false) @NotNull(message = "O email nao pode estar vazio") @Email var email: String,
     @Column(nullable = false) @NotNull(message = "O nome n pode estar vazio")var nome: String,
     @Column(nullable = false) @NotNull(message = "O cpf nao pode estar vazio")var cpf: String,

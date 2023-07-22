@@ -1,4 +1,4 @@
-package com.grocery.jumarket.dto
+package com.grocery.jumarket.dto.request
 
 import java.math.BigDecimal
 

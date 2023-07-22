@@ -1,7 +1,7 @@
 package com.grocery.jumarket.controller
 
-import com.grocery.jumarket.dto.FinalizarVendaDTO
-import com.grocery.jumarket.dto.VendaDTO
+import com.grocery.jumarket.dto.request.FinalizarVendaDTO
+import com.grocery.jumarket.dto.request.VendaDTO
 import com.grocery.jumarket.service.impl.VendaService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

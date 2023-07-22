@@ -1,16 +1,17 @@
-package com.grocery.jumarket.service.impl
+/*package com.grocery.jumarket.service.impl
 
 
 import com.grocery.jumarket.domain.Carrinho
 import com.grocery.jumarket.domain.ItemCarrinho
 import com.grocery.jumarket.domain.Usuario
-import com.grocery.jumarket.dto.*
+import com.grocery.jumarket.dto.request.CarrinhoDTO
+import com.grocery.jumarket.dto.request.ItemCarrinhoDTO
+import com.grocery.jumarket.dto.request.ProdutoDTO
 import com.grocery.jumarket.repositories.CarrinhoRepository
 import com.grocery.jumarket.repositories.ProdutoRepository
 import com.grocery.jumarket.repositories.UsuarioRepository
 import com.grocery.jumarket.service.ICarrinhoService
 
-import com.grocery.jumarket.service.exception.BusinessException
 import com.grocery.jumarket.service.exception.EstoqueInsuficienteException
 import com.grocery.jumarket.service.exception.NotFoundException
 import org.springframework.stereotype.Service
@@ -98,4 +99,4 @@ class CarrinhoService (
         usuario.carrinho = carrinho
         return carrinhoRepository.save(carrinho)
     }
-}
+}*/

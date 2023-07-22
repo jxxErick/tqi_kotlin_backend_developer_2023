@@ -1,129 +1,103 @@
 package com.grocery.jumarket.service
 
 import com.grocery.jumarket.domain.Categoria
-import com.grocery.jumarket.dto.CategoriaDTO
-import com.grocery.jumarket.dto.NewCategoriaDTO
 import com.grocery.jumarket.repositories.CategoriaRepository
 import com.grocery.jumarket.service.exception.NotFoundException
 import com.grocery.jumarket.service.impl.CategoriaService
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.verify
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.context.ActiveProfiles
 import java.util.*
 
+
 @ActiveProfiles("test")
 @ExtendWith(MockKExtension::class)
 class CategoriaServiceTest {
-@MockK lateinit var categoriaRepository: CategoriaRepository
-@InjectMockKs lateinit var categoriaService: CategoriaService
+
+    @MockK lateinit var categoriaRepository: CategoriaRepository
+    @InjectMockKs lateinit var categoriaService: CategoriaService
+    private lateinit var categoria: Categoria
+    @BeforeEach
+    fun setUp() {
+        categoriaRepository = mockk()
+        categoriaService = CategoriaService(categoriaRepository)
+
+        categoria = Categoria(
+            id = 1L,
+            nome = "Categoria Teste"
+        )
+    }
 
     @Test
     fun `deve criar uma nova categoria`() {
+        every { categoriaRepository.save(any()) } returns categoria
 
-        val categoriaFake: CategoriaDTO = construirCategoria()
-        val categoriaCriada: Categoria = Categoria(id = categoriaFake.id, nome = categoriaFake.nome)
+        val resultado = categoriaService.criarCategoria(categoria)
 
-        every { categoriaRepository.save(any()) } returns categoriaCriada
-
-        val atual: CategoriaDTO = categoriaService.criarCategoria(categoriaFake)
-
-        assertThat(atual).isNotNull()
-        assertThat(atual).isExactlyInstanceOf(CategoriaDTO::class.java)
-        assertThat(atual.id).isEqualTo(categoriaCriada.id)
-        assertThat(atual.nome).isEqualTo(categoriaCriada.nome)
+        assertEquals(categoria, resultado)
     }
 
     @Test
-    fun `deve listar todas as categorias`() {
+    fun `deve listar as categorias`() {
+        val listaCategorias = listOf(categoria)
+        every { categoriaRepository.findAll() } returns listaCategorias
 
-        val categoriasFake = listOf(
-            Categoria(id = 1L, nome = "Eletrônicos"),
-            Categoria(id = 2L, nome = "Roupas"),
-            Categoria(id = 3L, nome = "Alimentos")
-        )
-        every { categoriaRepository.findAll() } returns categoriasFake
+        val resultado = categoriaService.listarCategorias()
 
-        val atual: List<CategoriaDTO> = categoriaService.listarCategorias()
-
-        assertThat(atual).hasSize(categoriasFake.size)
-        for (i in categoriasFake.indices) {
-            assertThat(atual[i].id).isEqualTo(categoriasFake[i].id)
-            assertThat(atual[i].nome).isEqualTo(categoriasFake[i].nome)
-        }
+        assertEquals(listaCategorias, resultado)
     }
 
     @Test
-    fun `deve buscar uma categoria passando a id`() {
+    fun `deve deletar uma categoria`() {
+        every { categoriaRepository.findById(categoria.id!!) } returns Optional.of(categoria)
+        every { categoriaRepository.delete(categoria) } just Runs
 
-        val idFake: Long = Random().nextLong()
-        val categoriaFake: CategoriaDTO = construirCategoria(id = idFake)
-        every { categoriaRepository.findById(idFake) } returns Optional.of(Categoria(id = categoriaFake.id,
-            nome = categoriaFake.nome))
+        categoriaService.deletarCategoria(categoria.id!!)
 
-        val atual: CategoriaDTO = categoriaService.buscarCategoriaPorId(idFake)
-
-        Assertions.assertThat(atual).isNotNull
-        Assertions.assertThat(atual).isExactlyInstanceOf(CategoriaDTO::class.java)
-        Assertions.assertThat(atual.id).isEqualTo(categoriaFake.id)
-        Assertions.assertThat(atual.nome).isEqualTo(categoriaFake.nome)
-
+        verify(exactly = 1) { categoriaRepository.delete(categoria) }
     }
     @Test
-    fun `deve lançar uma notFoundExcpetion caso a id seja invalida `(){
+    fun `deve editar uma categoria`() {
+        val novaDescricao = "Nova Categoria"
+        val categoriaAtualizada = categoria.copy(nome = novaDescricao)
+        every { categoriaRepository.findById(categoria.id!!) } returns Optional.of(categoria)
+        every { categoriaRepository.save(categoria) } returns categoriaAtualizada
 
-        val idFake: Long = Random().nextLong()
-        every { categoriaRepository.findById(idFake) } returns Optional.empty()
+        val resultado = categoriaService.editarCategoria(categoria.id!!, categoriaAtualizada)
 
-        Assertions.assertThatExceptionOfType(NotFoundException::class.java)
-            .isThrownBy { categoriaService.buscarCategoriaPorId(idFake) }
-            .withMessage("Categoria não encontrada")
-
-        verify ( exactly = 1 ) {categoriaRepository.findById(idFake)}
+        assertEquals(categoriaAtualizada, resultado)
     }
 
     @Test
-    fun `deve deletar uma categoria existente`() {
+    fun `deve lançar NotFoundException ao tentar editar categoria inexistente`() {
+        val categoriaInexistente = Categoria(nome = "t", id = 2L)
+        every { categoriaRepository.findById(categoriaInexistente.id!!) } returns Optional.empty()
 
-        val categoriaExistente = Categoria(id = 1L, nome = "Eletrônicos")
-        every { categoriaRepository.findById(categoriaExistente.id!!) } returns Optional.of(categoriaExistente)
-        every { categoriaRepository.deleteById(categoriaExistente.id!!) } returns Unit
-
-
-        categoriaService.deletarCategoria(categoriaExistente.id!!)
-
-
-        verify { categoriaRepository.deleteById(categoriaExistente.id!!) }
+        assertThrows(NotFoundException::class.java) { categoriaService.editarCategoria(categoriaInexistente.id!!, categoriaInexistente) }
     }
+
     @Test
-    fun `deve editar uma categoria existente`() {
+    fun `deve buscar categoria pelo ID`() {
+        val idCategoria = 1L
+        every { categoriaRepository.findById(idCategoria) } returns Optional.of(categoria)
 
-        val categoriaExistente = Categoria(id = 1L, nome = "Eletrônicos")
-        every { categoriaRepository.findById(categoriaExistente.id!!) } returns Optional.of(categoriaExistente)
+        val resultado = categoriaService.buscarCategoriaPorId(idCategoria)
 
-        val newCategoriaDTO = NewCategoriaDTO(nome = "Eletrônicos Atualizados")
-        val categoriaAtualizada = Categoria(id = 1L, nome = "Eletrônicos Atualizados")
-        every { categoriaRepository.save(any()) } returns categoriaAtualizada
+        assertEquals(categoria, resultado)
+    }
 
-        val atual: Categoria = categoriaService.editarCategoria(categoriaExistente.id!!, newCategoriaDTO)
+    @Test
+    fun `deve lançar NotFoundException ao tentar buscar categoria por ID inexistente`() {
+        val idCategoriaNaoExistente = 2L
+        every { categoriaRepository.findById(idCategoriaNaoExistente) } returns Optional.empty()
 
-        assertThat(atual).isNotNull()
-        assertThat(atual.id).isEqualTo(categoriaExistente.id)
-        assertThat(atual.nome).isEqualTo(newCategoriaDTO.nome)
+        assertThrows(NotFoundException::class.java) { categoriaService.buscarCategoriaPorId(idCategoriaNaoExistente) }
     }
 }
-
-private fun construirCategoria(
-    nome: String = "Eletrônicos",
-    id: Long = 1L
-) = CategoriaDTO(
-    nome = nome,
-    id = id
-)
-

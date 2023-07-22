@@ -1,4 +1,4 @@
-package com.grocery.jumarket.dto
+package com.grocery.jumarket.dto.request
 
 data class NewCarrinhoDTO(
     val carrinhoId: Long,

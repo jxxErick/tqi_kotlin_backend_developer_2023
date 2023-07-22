@@ -1,15 +1,14 @@
 package com.grocery.jumarket.service
 
 
-import com.grocery.jumarket.dto.NewUsuarioDTO
-import com.grocery.jumarket.dto.UsuarioDTO
+import com.grocery.jumarket.domain.Usuario
 
 
 interface IUsuarioService {
-    fun criarUsuario(usuarioDTO: NewUsuarioDTO): UsuarioDTO
-    fun listarUsuarios(): List<UsuarioDTO>
-    fun getUsuarioPorId(id: Long): UsuarioDTO
-    fun getUsuarioPorEmail(email: String): UsuarioDTO?
-    fun atualizarUsuario(id: Long, usuarioDTO: NewUsuarioDTO): UsuarioDTO
+    fun criarUsuario(usuario: Usuario): Usuario
+    fun listarUsuarios(): List<Usuario>
+    fun getUsuarioPorId(id: Long): Usuario
+    fun getUsuarioPorEmail(email: String): Usuario?
+    fun atualizarUsuario(usuario: Usuario): Usuario?
 
 }
