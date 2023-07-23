@@ -1,14 +1,15 @@
 package com.grocery.jumarket.service
 
 
-import com.grocery.jumarket.dto.request.CarrinhoDTO
-import com.grocery.jumarket.dto.request.ItemCarrinhoDTO
+import com.grocery.jumarket.domain.Carrinho
+import com.grocery.jumarket.domain.ItemCarrinho
 
 interface ICarrinhoService {
-    fun adicionarItem(carrinhoDTO: CarrinhoDTO)
-    fun removerItem(carrinhoId: Long, produtoId: Long)
-    fun listarItens(carrinhoId: Long): List<ItemCarrinhoDTO>
+    fun adicionarItemAoCarrinho(usuarioId: Long, produtoId: Long, quantidade: Long)
+    fun removerItem(carrinho: Carrinho, produtoId: Long)
+    fun listarItensPorUsuario(usuarioId: Long): List<ItemCarrinho>
     fun deletarCarrinho(usuarioId: Long)
+    fun getCarrinhoPorUsuario(usuarioId: Long): Carrinho?
 
 
 }

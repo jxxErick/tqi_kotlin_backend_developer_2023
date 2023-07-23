@@ -2,8 +2,6 @@ package com.grocery.jumarket.service
 
 import com.grocery.jumarket.domain.Carrinho
 import com.grocery.jumarket.domain.Usuario
-import com.grocery.jumarket.dto.request.NewUsuarioDTO
-import com.grocery.jumarket.dto.request.UsuarioDTO
 import com.grocery.jumarket.repositories.UsuarioRepository
 import com.grocery.jumarket.service.exception.BusinessException
 import com.grocery.jumarket.service.exception.NotFoundException

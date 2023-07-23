@@ -1,8 +1,6 @@
 package com.grocery.jumarket.service.impl
 
 import com.grocery.jumarket.domain.Categoria
-import com.grocery.jumarket.dto.request.CategoriaDTO
-import com.grocery.jumarket.dto.request.NewCategoriaDTO
 import com.grocery.jumarket.service.exception.NotFoundException
 import com.grocery.jumarket.repositories.CategoriaRepository
 import com.grocery.jumarket.service.ICategoriaService

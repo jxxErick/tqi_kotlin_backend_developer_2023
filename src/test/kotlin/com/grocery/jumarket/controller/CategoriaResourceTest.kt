@@ -3,7 +3,6 @@ import com.grocery.jumarket.JuMarketApplication
 import com.grocery.jumarket.controller.CategoriaResource
 import com.grocery.jumarket.domain.Categoria
 import com.grocery.jumarket.dto.request.CategoriaDTO
-import com.grocery.jumarket.dto.request.NewCategoriaDTO
 import com.grocery.jumarket.dto.view.CategoriaViewDTO
 import com.grocery.jumarket.service.impl.CategoriaService
 import io.mockk.*
@@ -13,17 +12,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
-import org.testng.Assert.assertEquals
 
 @SpringBootTest(classes = [JuMarketApplication::class])
 @ActiveProfiles("test")

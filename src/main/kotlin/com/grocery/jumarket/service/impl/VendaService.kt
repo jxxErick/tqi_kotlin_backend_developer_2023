@@ -6,6 +6,7 @@ import com.grocery.jumarket.dto.request.FinalizarVendaDTO
 import com.grocery.jumarket.dto.request.ItemVendidoDTO
 import com.grocery.jumarket.dto.request.UsuarioDTO
 import com.grocery.jumarket.dto.request.VendaDTO
+import com.grocery.jumarket.ennumeration.FormaDePagamento
 import com.grocery.jumarket.repositories.CarrinhoRepository
 import com.grocery.jumarket.repositories.ProdutoRepository
 import com.grocery.jumarket.repositories.UsuarioRepository
@@ -23,19 +24,18 @@ import java.math.BigDecimal
     class VendaService(
         private val vendaRepository: VendaRepository,
         private val usuarioRepository: UsuarioRepository,
-        private val produtoRepository: ProdutoRepository,
         private val carrinhoRepository: CarrinhoRepository
     ) : IVendaService {
-        //finaliza venda passando forma de pagamento, usuarioId e os itens
-        override fun finalizarVenda(finalizarVendaDTO: FinalizarVendaDTO): VendaDTO {
-            // Verifica se o usuário existe
-            val usuario = usuarioRepository.findById(finalizarVendaDTO.usuarioId)
+
+        override fun finalizarVenda(formaDePagamento: FormaDePagamento, usuarioId: Long): Venda {
+
+            val usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow { NotFoundException("Usuário não encontrado") }
 
             val carrinhoDoUsuario = usuario.carrinho
                 ?: throw NotFoundException("Carrinho do usuário não encontrado")
 
-            // Verifica se o carrinho do usuário possui itens
+
             if (carrinhoDoUsuario.itens.isEmpty()) {
                 throw BusinessException("Carrinho Vazio.")
             }
@@ -43,10 +43,10 @@ import java.math.BigDecimal
             val venda = Venda(
                 usuario = usuario,
                 valorTotal = BigDecimal.ZERO,
-                formaDePagamento = finalizarVendaDTO.formaDePagamento
+                formaDePagamento = formaDePagamento
             )
 
-            // Percorre os itens do carrinho e adiciona na venda
+
             for (itemCarrinho in carrinhoDoUsuario.itens) {
                 val produto = itemCarrinho.produto
 
@@ -68,41 +68,14 @@ import java.math.BigDecimal
 
             val vendaSalva = vendaRepository.save(venda)
 
-            // Limpa o carrinho do usuário
+
             carrinhoDoUsuario.itens.clear()
             carrinhoRepository.save(carrinhoDoUsuario)
 
-            return vendaSalva.toDTO()
-        }
-        private fun Venda.toDTO(): VendaDTO {
-            val usuarioDTO = UsuarioDTO(
-                id = usuario.id,
-                email = usuario.email,
-                nome = usuario.nome,
-                cpf = usuario.cpf
-            )
-
-            val itensVendidosDTO = itensVendidos.map { itemVendido ->
-                ItemVendidoDTO(
-                    produtoId = itemVendido.produto.id!!,
-                    quantidade = itemVendido.quantidade,
-                    precoUnitario = itemVendido.precoUnitario
-                )
-            }
-
-            return VendaDTO(
-                id = id!!,
-                usuario = usuarioDTO,
-                valorTotal = valorTotal,
-                formaDePagamento = formaDePagamento.name,
-                itensVendidos = itensVendidosDTO
-            )
-        }
-        override fun listarVendas(): List<VendaDTO> {
-            val vendas = vendaRepository.findAll()
-            return vendas.map { venda -> venda.toDTO() }
+            return vendaSalva
         }
 
-
-
+        override fun listarVendas(): List<Venda> {
+            return vendaRepository.findAll()
+        }
     }

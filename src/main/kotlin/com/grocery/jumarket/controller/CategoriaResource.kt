@@ -2,7 +2,6 @@ package com.grocery.jumarket.controller
 
 import com.grocery.jumarket.domain.Categoria
 import com.grocery.jumarket.dto.request.CategoriaDTO
-import com.grocery.jumarket.dto.request.NewCategoriaDTO
 import com.grocery.jumarket.dto.view.CategoriaViewDTO
 import com.grocery.jumarket.service.impl.CategoriaService
 import org.springframework.http.HttpStatus

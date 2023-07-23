@@ -1,8 +1,6 @@
 package com.grocery.jumarket.service
 
 import com.grocery.jumarket.domain.Categoria
-import com.grocery.jumarket.dto.request.CategoriaDTO
-import com.grocery.jumarket.dto.request.NewCategoriaDTO
 
 
 interface ICategoriaService {

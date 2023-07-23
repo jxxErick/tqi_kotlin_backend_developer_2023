@@ -1,12 +1,10 @@
-/*package com.grocery.jumarket.service.impl
+package com.grocery.jumarket.service.impl
 
 
 import com.grocery.jumarket.domain.Carrinho
 import com.grocery.jumarket.domain.ItemCarrinho
 import com.grocery.jumarket.domain.Usuario
-import com.grocery.jumarket.dto.request.CarrinhoDTO
-import com.grocery.jumarket.dto.request.ItemCarrinhoDTO
-import com.grocery.jumarket.dto.request.ProdutoDTO
+
 import com.grocery.jumarket.repositories.CarrinhoRepository
 import com.grocery.jumarket.repositories.ProdutoRepository
 import com.grocery.jumarket.repositories.UsuarioRepository
@@ -25,18 +23,17 @@ class CarrinhoService (
     private val usuarioRepository: UsuarioRepository
 ): ICarrinhoService {
 
-    //Adiciona item ao carrinho do usuario passando a id dele
-    override fun adicionarItem(carrinhoDTO: CarrinhoDTO) {
+    override fun adicionarItemAoCarrinho(usuarioId: Long, produtoId: Long, quantidade: Long) {
         // Verifica se o usuário existe
-        val usuario = usuarioRepository.findById(carrinhoDTO.usuarioId)
+        val usuario = usuarioRepository.findById(usuarioId)
             .orElseThrow { NotFoundException("Usuário não encontrado") }
 
         // Verifica se o produto existe
-        val produto = produtoRepository.findById(carrinhoDTO.produtoId)
+        val produto = produtoRepository.findById(produtoId)
             .orElseThrow { NotFoundException("Produto não encontrado") }
 
         // Verifica se o produto possui estoque suficiente
-        if (produto.quantidadeEstoque < carrinhoDTO.quantidade) {
+        if (produto.quantidadeEstoque < quantidade) {
             throw EstoqueInsuficienteException("Não há estoque suficiente para adicionar o produto ao carrinho.")
         }
 
@@ -44,59 +41,51 @@ class CarrinhoService (
         val carrinho = usuario.carrinho ?: criarCarrinhoCasoAdicioneProduto(usuario)
 
         // Adiciona o produto ao carrinho
-        carrinho.adicionarItem(ItemCarrinho(produto, carrinhoDTO.quantidade, produto.precoUnitario))
+        carrinho.adicionarItem(ItemCarrinho(produto, quantidade, produto.precoUnitario))
         carrinhoRepository.save(carrinho)
     }
 
-
-   override fun removerItem(carrinhoId: Long, produtoId: Long) {
-       // busca o carrinho
-        val carrinho = carrinhoRepository.findById(carrinhoId)
-            .orElseThrow { NotFoundException("Carrinho não encontrado") }
-        //deleta o produto
+    override fun removerItem(carrinho: Carrinho, produtoId: Long) {
+        // Remove o item do carrinho
         carrinho.removerItem(produtoId)
         carrinhoRepository.save(carrinho)
-        // caso o carrinho fique vazio apaga ele
-       if (carrinho.itens.isEmpty()) {
-           carrinhoRepository.delete(carrinho)
-       }
+
+        // Caso o carrinho fique vazio, apaga ele
+        if (carrinho.itens.isEmpty()) {
+            carrinhoRepository.delete(carrinho)
+        }
     }
 
-    //lista todos itens do carrinho
-    override fun listarItens(carrinhoId: Long): List<ItemCarrinhoDTO> {
-        val carrinho = carrinhoRepository.findById(carrinhoId)
-            .orElseThrow { NotFoundException("Carrinho não encontrado") }
+    override fun listarItensPorUsuario(usuarioId: Long): List<ItemCarrinho> {
+        // Verifica se o usuário existe
+        val usuario = usuarioRepository.findById(usuarioId)
+            .orElseThrow { NotFoundException("Usuário não encontrado") }
 
-        return carrinho.itens.map { item ->
-            ItemCarrinhoDTO(
-                id = item.id!!,
-                produto = ProdutoDTO(
-                    id = item.produto.id!!,
-                    nome = item.produto.nome,
-                    unidadeDeMedida = item.produto.unidadeDeMedida,
-                    precoUnitario = item.produto.precoUnitario,
-                    categoriaId = null,
-                    quantidadeEstoque = null
-                ),
-                quantidade = item.quantidade,
-                precoUnitario = item.precoUnitario
-            )
-        }
+        // Verifica se o usuário possui carrinho
+        val carrinho = usuario.carrinho
+            ?: throw NotFoundException("Carrinho não encontrado para o usuário")
+
+        return carrinho.itens
     }
 
     override fun deletarCarrinho(usuarioId: Long) {
         val usuario = usuarioRepository.findById(usuarioId)
-            .orElseThrow { NotFoundException("Carrinho não encontrado") }
-        val carrinho = usuario.carrinho
+            .orElseThrow { NotFoundException("Usuário não encontrado") }
 
-        if (carrinho != null) {
-            carrinhoRepository.delete(carrinho)
-        }
+        val carrinho = usuario.carrinho
+            ?: throw NotFoundException("Carrinho não encontrado para o usuário")
+
+        carrinhoRepository.delete(carrinho)
     }
-    // essa função criei só pra auxiliar na de adcionar item, caso o usuario nao tenha um carrinho, ela cria automaticamente um
+    override fun getCarrinhoPorUsuario(usuarioId: Long): Carrinho? {
+        val usuario = usuarioRepository.findById(usuarioId)
+            .orElseThrow { NotFoundException("Usuário não encontrado") }
+        return usuario.carrinho
+    }
+
     fun criarCarrinhoCasoAdicioneProduto(usuario: Usuario): Carrinho {
         val carrinho = Carrinho(usuario = usuario)
         usuario.carrinho = carrinho
         return carrinhoRepository.save(carrinho)
     }
-}*/
+}

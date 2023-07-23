@@ -1,5 +1,8 @@
 package com.grocery.jumarket.domain
 
+import com.grocery.jumarket.dto.request.ItemVendidoDTO
+import com.grocery.jumarket.dto.request.UsuarioDTO
+import com.grocery.jumarket.dto.request.VendaDTO
 import com.grocery.jumarket.ennumeration.FormaDePagamento
 import jakarta.persistence.*
 import java.math.BigDecimal
@@ -28,6 +31,28 @@ data class Venda(
                 itensVendidos.add(itemVendido)
                 itemVendido.venda = this
         }
+        fun toDTO(): VendaDTO {
+                val usuarioDTO = UsuarioDTO(
+                        id = usuario.id,
+                        email = usuario.email,
+                        nome = usuario.nome,
+                        cpf = usuario.cpf
+                )
 
+                val itensVendidosDTO = itensVendidos.map { itemVendido ->
+                        ItemVendidoDTO(
+                                produtoId = itemVendido.produto.id!!,
+                                quantidade = itemVendido.quantidade,
+                                precoUnitario = itemVendido.precoUnitario
+                        )
+                }
 
+                return VendaDTO(
+                        id = id!!,
+                        usuario = usuarioDTO,
+                        valorTotal = valorTotal,
+                        formaDePagamento = formaDePagamento.name,
+                        itensVendidos = itensVendidosDTO
+                )
+        }
 }
