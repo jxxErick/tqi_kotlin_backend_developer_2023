@@ -14,6 +14,8 @@ data class Usuario(
     @Column(nullable = false) @NotNull(message = "O cpf nao pode estar vazio")var cpf: String,
     @OneToOne(mappedBy = "usuario")  @JoinColumn(name = "carrinho_id") var carrinho: Carrinho?,
     @OneToMany(mappedBy = "usuario") val venda: List<Venda> = mutableListOf()
-)
-
-
+){
+override fun hashCode(): Int {
+    return id?.hashCode() ?: 0
+}
+}

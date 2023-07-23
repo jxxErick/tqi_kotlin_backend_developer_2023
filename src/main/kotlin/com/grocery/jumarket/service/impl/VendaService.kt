@@ -33,7 +33,7 @@ import java.math.BigDecimal
                 .orElseThrow { NotFoundException("Usuário não encontrado") }
 
             val carrinhoDoUsuario = usuario.carrinho
-                ?: throw NotFoundException("Carrinho do usuário não encontrado")
+                ?: throw NotFoundException("Usuario não possui carrinho disponivel, adicione itens para depois finalizar.")
 
 
             if (carrinhoDoUsuario.itens.isEmpty()) {

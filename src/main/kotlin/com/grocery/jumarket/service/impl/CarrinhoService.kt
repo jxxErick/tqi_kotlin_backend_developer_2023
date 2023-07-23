@@ -45,7 +45,16 @@ class CarrinhoService (
         carrinhoRepository.save(carrinho)
     }
 
-    override fun removerItem(carrinho: Carrinho, produtoId: Long) {
+    override fun removerItemDoCarrinho(carrinho: Carrinho, produtoId: Long) {
+        val carrinhoExistente = carrinhoRepository.findById(carrinho.id!!)
+        if (carrinhoExistente.isEmpty) {
+            throw NotFoundException("Carrinho não encontrado.")
+        }
+
+        if (carrinho.itens.none { it.id == produtoId }) {
+            throw NotFoundException("Produto não encontrado no carrinho.")
+        }
+
         // Remove o item do carrinho
         carrinho.removerItem(produtoId)
         carrinhoRepository.save(carrinho)

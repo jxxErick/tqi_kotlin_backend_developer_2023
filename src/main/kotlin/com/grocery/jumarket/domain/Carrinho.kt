@@ -41,5 +41,7 @@ data class Carrinho(
                         valorTotal -= item.precoUnitario.multiply(BigDecimal.valueOf(item.quantidade))
                 }
         }
-
+        override fun hashCode(): Int {
+                return id?.hashCode() ?: 0
+        }
 }

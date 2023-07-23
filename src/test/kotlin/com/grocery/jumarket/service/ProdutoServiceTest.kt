@@ -142,7 +142,7 @@ class ProdutoServiceTest {
     @Test
     fun `deve atualizar um produto existente`() {
         // Dado
-        val categoriaExistente = categoriaFake.copy(id = 1L) // Supondo que o ID da categoria existente seja 1
+        val categoriaExistente = categoriaFake.copy(id = 1L)
         every { categoriaRepository.findById(1L) } returns Optional.of(categoriaExistente)
 
         val produtoExistente = produtoFake.copy()
@@ -153,16 +153,14 @@ class ProdutoServiceTest {
             nome = "Produto Atualizado",
             unidadeDeMedida = "Kilograma",
             precoUnitario = BigDecimal("50.00"),
-            categoria = categoriaExistente, // Usar a categoria existente previamente criada
+            categoria = categoriaExistente,
             quantidadeEstoque = 20L
         )
 
         every { produtoRepository.save(any()) } returns updatedProdutoData
 
-        // Quando
         val atual: Produto = produtoService.atualizarProduto(updatedProdutoData)
 
-        // Então
         Assertions.assertThat(atual).isNotNull()
         Assertions.assertThat(atual).isEqualTo(updatedProdutoData)
     }

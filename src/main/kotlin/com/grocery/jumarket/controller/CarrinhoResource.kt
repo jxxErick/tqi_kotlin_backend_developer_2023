@@ -24,7 +24,7 @@ class CarrinhoResource(
     @DeleteMapping("/{carrinhoId}/produtos/{produtoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun removerItemDoCarrinho(@PathVariable carrinhoId: Carrinho, @PathVariable produtoId: Long) {
-        carrinhoService.removerItem(carrinhoId, produtoId)
+        carrinhoService.removerItemDoCarrinho(carrinhoId, produtoId)
     }
 
     @GetMapping("/{usuarioId}")
