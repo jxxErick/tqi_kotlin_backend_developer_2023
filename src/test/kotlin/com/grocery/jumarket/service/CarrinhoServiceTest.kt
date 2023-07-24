@@ -211,9 +211,9 @@ class CarrinhoServiceTest {
     fun `deve lançar NotFoundException ao tentar retornar carrinho de um usuário sem carrinho`() {
         val usuarioFakeSemCarrinho = Usuario(
             id = 2L,
-            email = "test2@example.com",
-            nome = "Jane Doe",
-            cpf = "98765432101",
+            email = "test@exemplo.com",
+            nome = "Jo",
+            cpf = "12345678900",
             carrinho = null
         )
 
