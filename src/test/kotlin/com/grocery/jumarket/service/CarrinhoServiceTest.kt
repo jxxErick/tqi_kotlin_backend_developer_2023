@@ -42,7 +42,6 @@ class CarrinhoServiceTest {
     @BeforeEach
     fun setUp() {
         carrinhoService = CarrinhoService(carrinhoRepository, produtoRepository, usuarioRepository)
-
         usuarioFake = Usuario(
             id = 1L,
             email = "test@example.com",
@@ -50,7 +49,6 @@ class CarrinhoServiceTest {
             cpf = "12345678901",
             carrinho = null
         )
-
         categoriaFake = Categoria(id = 1L, nome = "Eletrônicos")
         produtoFake = Produto(
             id = 1L,
@@ -80,7 +78,6 @@ class CarrinhoServiceTest {
         Assertions.assertEquals(1, carrinhoFake.itens.size)
         Assertions.assertEquals(quantidade, carrinhoFake.quantidadeItens)
         Assertions.assertEquals(BigDecimal("200.00"), carrinhoFake.valorTotal)
-
         verify(exactly = 1) { usuarioRepository.findById(any()) }
         verify(exactly = 1) { produtoRepository.findById(any()) }
         verify(exactly = 2) { carrinhoRepository.save(any()) }
@@ -94,14 +91,11 @@ class CarrinhoServiceTest {
         every { usuarioRepository.findById(usuarioId) } returns Optional.of(usuarioFake)
         every { produtoRepository.findById(produtoId) } returns Optional.of(produtoFake)
         every { carrinhoRepository.save(any()) } answers { firstArg() }
-
-
         produtoFake.quantidadeEstoque = 5L
 
         assertThrows<EstoqueInsuficienteException> {
             carrinhoService.adicionarItemAoCarrinho(usuarioId, produtoId, quantidade)
         }
-
         verify(exactly = 1) { usuarioRepository.findById(usuarioId) }
         verify(exactly = 1) { produtoRepository.findById(produtoId) }
         verify(exactly = 0) { carrinhoRepository.save(any()) }
@@ -123,6 +117,7 @@ class CarrinhoServiceTest {
         )
         carrinhoFake.itens.add(itemToRemove)
         carrinhoService.removerItemDoCarrinho(carrinhoFake, itemId)
+
         Assertions.assertTrue(carrinhoRepository.findAll().isEmpty())
         verify(exactly = 1) { carrinhoRepository.delete(any()) }
     }
@@ -159,13 +154,11 @@ class CarrinhoServiceTest {
         usuarioFake.carrinho = carrinhoFake
 
         every { usuarioRepository.findById(usuarioFake.id!!) } returns Optional.of(usuarioFake)
-
         val itensCarrinho = carrinhoService.listarItensPorUsuario(usuarioFake.id!!)
 
         Assertions.assertEquals(2, itensCarrinho.size)
         Assertions.assertTrue(itensCarrinho.contains(item1))
         Assertions.assertTrue(itensCarrinho.contains(item2))
-
         verify(exactly = 1) { usuarioRepository.findById(usuarioFake.id!!) }
     }
 
@@ -186,7 +179,6 @@ class CarrinhoServiceTest {
 
         every { usuarioRepository.findById(usuarioFake.id!!) } returns Optional.of(usuarioFake)
         every { carrinhoRepository.delete(any()) } just runs
-
         carrinhoService.deletarCarrinho(usuarioFake.id!!)
 
         verify(exactly = 1) { usuarioRepository.findById(usuarioFake.id!!) }
@@ -206,11 +198,9 @@ class CarrinhoServiceTest {
 
     @Test
     fun `deve retornar o carrinho de um usuário`() {
-
         usuarioFake.carrinho = carrinhoFake
 
         every { usuarioRepository.findById(usuarioFake.id!!) } returns Optional.of(usuarioFake)
-
         val carrinho = carrinhoService.getCarrinhoPorUsuario(usuarioFake.id!!)
 
         Assertions.assertEquals(carrinhoFake, carrinho)
@@ -219,9 +209,8 @@ class CarrinhoServiceTest {
 
     @Test
     fun `deve lançar NotFoundException ao tentar retornar carrinho de um usuário sem carrinho`() {
-
         val usuarioFakeSemCarrinho = Usuario(
-            id = 2L, // Definir um ID válido
+            id = 2L,
             email = "test2@example.com",
             nome = "Jane Doe",
             cpf = "98765432101",
@@ -229,12 +218,9 @@ class CarrinhoServiceTest {
         )
 
         every { usuarioRepository.findById(usuarioFakeSemCarrinho.id!!) } returns Optional.of(usuarioFakeSemCarrinho)
-
-
         val carrinho = carrinhoService.getCarrinhoPorUsuario(usuarioFakeSemCarrinho.id!!)
 
         Assertions.assertNull(carrinho)
-
         verify(exactly = 1) { usuarioRepository.findById(usuarioFakeSemCarrinho.id!!) }
     }
 }

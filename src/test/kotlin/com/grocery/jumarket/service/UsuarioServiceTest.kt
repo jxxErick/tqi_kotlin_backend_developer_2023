@@ -48,7 +48,6 @@ class UsuarioServiceTest {
 
     @Test
     fun `Deve criar um novo usuário`() {
-
         every { usuarioRepository.findByEmail(usuario.email) } returns null
         every { usuarioRepository.findByCpf(usuario.cpf) } returns null
         every { usuarioRepository.save(any()) } returns usuario
@@ -60,7 +59,6 @@ class UsuarioServiceTest {
 
     @Test
     fun `Deve lançar BusinessException para e-mail já existente`() {
-
         every { usuarioRepository.findByEmail(usuario.email) } returns usuario
 
         assertThrows(BusinessException::class.java) { usuarioService.criarUsuario(usuario) }
@@ -68,17 +66,14 @@ class UsuarioServiceTest {
 
     @Test
     fun `Deve lançar BusinessException para CPF já existente`() {
-
         every { usuarioRepository.findByEmail(usuario.email) } returns null
         every { usuarioRepository.findByCpf(usuario.cpf) } returns usuario
-
 
         assertThrows(BusinessException::class.java) { usuarioService.criarUsuario(usuario) }
     }
 
     @Test
     fun `Deve retornar a lista de usuários`() {
-
         val listaUsuarios = listOf(usuario)
         every { usuarioRepository.findAll() } returns listaUsuarios
 
@@ -89,7 +84,6 @@ class UsuarioServiceTest {
 
     @Test
     fun `Deve retornar o usuário pelo ID`() {
-
         val idUsuario = 1L
         every { usuarioRepository.findById(idUsuario) } returns Optional.of(usuario)
 
@@ -100,7 +94,6 @@ class UsuarioServiceTest {
 
     @Test
     fun `Deve lançar NotFoundException quando não encontrar o usuário pelo ID`() {
-
         val idUsuarioNaoExistente = 2L
         every { usuarioRepository.findById(idUsuarioNaoExistente) } returns Optional.empty()
 
@@ -109,7 +102,6 @@ class UsuarioServiceTest {
 
     @Test
     fun `Deve retornar o usuário pelo e-mail`() {
-
         val emailUsuario = "usuario@teste.com"
         every { usuarioRepository.findByEmail(emailUsuario) } returns usuario
 
@@ -120,7 +112,6 @@ class UsuarioServiceTest {
 
     @Test
     fun `Deve retornar null quando não encontrar o usuário pelo e-mail`() {
-
         val emailUsuarioNaoExistente = "naoexiste@teste.com"
         every { usuarioRepository.findByEmail(emailUsuarioNaoExistente) } returns null
 
@@ -131,7 +122,6 @@ class UsuarioServiceTest {
 
     @Test
     fun `Deve atualizar o usuário`() {
-
         val usuarioAtualizado = usuario.copy(nome = "Novo Nome")
         every { usuarioRepository.findById(usuario.id!!) } returns Optional.of(usuario)
         every { usuarioRepository.save(usuario) } returns usuarioAtualizado
@@ -143,7 +133,6 @@ class UsuarioServiceTest {
 
     @Test
     fun `Deve lançar NotFoundException ao tentar atualizar usuário inexistente`() {
-
         val usuarioInexistente = usuario.copy(id = 2L)
         every { usuarioRepository.findById(usuarioInexistente.id!!) } returns Optional.empty()
 

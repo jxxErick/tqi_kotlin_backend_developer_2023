@@ -76,9 +76,7 @@ class VendaServiceTest {
 
     @Test
     fun `deve finalizar a venda com sucesso`() {
-
         usuarioFake.carrinho = Carrinho(usuario = usuarioFake)
-
         val quantidadeItem1 = 2L
         val quantidadeItem2 = 3L
         val item1 = ItemCarrinho(produtoFake, quantidadeItem1, produtoFake.precoUnitario)
@@ -86,31 +84,25 @@ class VendaServiceTest {
         usuarioFake.carrinho?.itens?.addAll(listOf(item1, item2))
 
         every { usuarioRepository.findById(any()) } returns Optional.of(usuarioFake)
-
         every { carrinhoRepository.save(any()) } answers {
             val carrinho = arg<Carrinho>(0)
             usuarioFake.carrinho = carrinho
             carrinho
         }
-
         val formaDePagamento = FormaDePagamento.CARTAO_DE_CREDITO
         val venda = vendaService.finalizarVenda(formaDePagamento, usuarioFake.id!!)
 
         Assertions.assertEquals(usuarioFake, venda.usuario)
         Assertions.assertEquals(formaDePagamento, venda.formaDePagamento)
-
         val valorTotalEsperado = quantidadeItem1.toBigDecimal() * produtoFake.precoUnitario +
                 quantidadeItem2.toBigDecimal() * produtoFake.precoUnitario
         Assertions.assertEquals(valorTotalEsperado, venda.valorTotal)
-
         Assertions.assertTrue(carrinhoFake.itens.isEmpty())
 
     }
     @Test
     fun `deve lançar NotFoundException ao tentar finalizar venda de usuário inexistente`() {
-
         every { usuarioRepository.findById(any()) } returns Optional.empty()
-
         val formaDePagamento = FormaDePagamento.CARTAO_DE_CREDITO
 
         val exception = assertThrows<NotFoundException> {
@@ -121,10 +113,8 @@ class VendaServiceTest {
 
     @Test
     fun `deve lançar NotFoundException ao tentar finalizar venda com carrinho vazio`() {
-
         usuarioFake.carrinho = Carrinho(usuario = usuarioFake)
         every { usuarioRepository.findById(any()) } returns Optional.of(usuarioFake)
-
         val formaDePagamento = FormaDePagamento.CARTAO_DE_CREDITO
 
        val exception = assertThrows<BusinessException> {
@@ -150,7 +140,6 @@ class VendaServiceTest {
 
     @Test
     fun `deve retornar lista de vendas quando o repositório contém dados`() {
-
         val venda1 = Venda(id = 1L, usuario = usuarioFake, valorTotal = BigDecimal("250.00"), formaDePagamento = FormaDePagamento.CARTAO_DE_CREDITO)
         val venda2 = Venda(id = 2L, usuario = usuarioFake, valorTotal = BigDecimal("120.50"), formaDePagamento = FormaDePagamento.DINHEIRO)
 
