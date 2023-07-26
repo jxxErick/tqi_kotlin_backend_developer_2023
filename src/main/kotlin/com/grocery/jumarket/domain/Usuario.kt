@@ -9,15 +9,10 @@ import jakarta.validation.constraints.NotNull
 data class Usuario(
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long,
-
     @Column(nullable = false) @NotNull(message = "O email nao pode estar vazio") @Email var email: String,
-
     @Column(nullable = false) @NotNull(message = "O nome n pode estar vazio")var nome: String,
-
     @Column(nullable = false) @NotNull(message = "O cpf nao pode estar vazio")var cpf: String,
-
     @OneToOne(mappedBy = "usuario")  @JoinColumn(name = "carrinho_id") var carrinho: Carrinho?,
-
     @OneToMany(mappedBy = "usuario") val venda: List<Venda> = mutableListOf()
 ){
 override fun hashCode(): Int {
