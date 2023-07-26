@@ -20,6 +20,7 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.context.ActiveProfiles
 import java.math.BigDecimal
+import java.time.LocalDate
 import java.util.*
 
 
@@ -149,6 +150,30 @@ class VendaServiceTest {
         assertFalse(listaDeVendas.isEmpty())
         assertTrue(listaDeVendas.contains(venda1))
         assertTrue(listaDeVendas.contains(venda2))
+    }
+
+    @Test
+    fun `deve retornar lista de vendas por data quando o repositório contém dados`() {
+        val dataVenda1 = LocalDate.of(2023, 1, 1)
+        val dataVenda2 = LocalDate.of(2023, 1, 2)
+        val venda1 = Venda(id = 1L, usuario = usuarioFake, valorTotal = BigDecimal("250.00"), formaDePagamento = FormaDePagamento.CARTAO_DE_CREDITO, dataVenda = dataVenda1)
+        val venda2 = Venda(id = 2L, usuario = usuarioFake, valorTotal = BigDecimal("120.50"), formaDePagamento = FormaDePagamento.DINHEIRO, dataVenda = dataVenda2)
+
+
+        every { vendaRepository.findAllByDataVenda(dataVenda1) } returns listOf(venda1)
+        every { vendaRepository.findAllByDataVenda(dataVenda2) } returns listOf(venda2)
+
+
+        val listaDeVendasData1 = vendaService.listarVendasPorData(dataVenda1)
+        assertFalse(listaDeVendasData1.isEmpty())
+        assertTrue(listaDeVendasData1.contains(venda1))
+        assertFalse(listaDeVendasData1.contains(venda2))
+
+
+        val listaDeVendasData2 = vendaService.listarVendasPorData(dataVenda2)
+        assertFalse(listaDeVendasData2.isEmpty())
+        assertTrue(listaDeVendasData2.contains(venda2))
+        assertFalse(listaDeVendasData2.contains(venda1))
     }
 }
 

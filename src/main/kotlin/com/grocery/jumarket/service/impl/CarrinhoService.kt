@@ -36,7 +36,15 @@ class CarrinhoService (
 
         val carrinho = usuario.carrinho ?: criarCarrinhoCasoAdicioneProduto(usuario)
 
-        carrinho.adicionarItem(ItemCarrinho(produto, quantidade, produto.precoUnitario))
+        val itemExistente = carrinho.itens.find { it.produto == produto }
+
+        if (itemExistente != null) {
+            itemExistente.quantidade += quantidade
+            itemExistente.precoUnitario = produto.precoUnitario
+        } else {
+            val novoItem = ItemCarrinho(produto, quantidade, produto.precoUnitario)
+            carrinho.adicionarItem(novoItem)
+        }
         carrinhoRepository.save(carrinho)
     }
 

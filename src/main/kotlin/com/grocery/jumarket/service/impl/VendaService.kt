@@ -81,6 +81,12 @@ import java.time.LocalDate
         }
 
    override fun listarVendasPorData(data: LocalDate): List<Venda> {
-        return vendaRepository.findAllByDataVenda(data)
+        val vendas = vendaRepository.findAllByDataVenda(data)
+
+       if (vendas.isEmpty()) {
+           throw NotFoundException("Nenhuma venda encontrada para a data informada")
+       }
+
+       return vendas
     }
     }

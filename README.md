@@ -51,4 +51,4 @@ O carrinho recebe uma lista de Itens, e contém também um usuario, a quantidade
 
 - Venda
 
-Para essa parte, podemos finalizar uma venda. Assim que finalizado a venda, o carrinho do usuario ficam vazio e automaticamente é deletado para ocupar menos espaço na memoria, é descontado o valor total do estoque e os itens vendidos vao para um histórico separado para poder fazer eventuais controles e etc. para isso acontecer, é necessario passar a forma de pagamento e a id do usuario que deseja finalizar a venda. além disso temos outro método que é o de listar as vendas do dia para eventuais relatórios de venda do dia. 
+Para essa parte, podemos finalizar uma venda. Assim que finalizado a venda, o carrinho do usuario fica vazio e automaticamente é deletado para ocupar menos espaço na memoria, é descontado o valor total do estoque e os itens vendidos vao para um histórico separado para poder fazer eventuais controles e etc. para isso acontecer, é necessario passar a forma de pagamento e a id do usuario que deseja finalizar a venda. além disso temos outro método que é o de listar as vendas do dia para eventuais relatórios de venda do dia. 
