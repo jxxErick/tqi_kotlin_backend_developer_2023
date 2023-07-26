@@ -39,16 +39,16 @@ Pode-se manipular categorias da forma que quiser, editar, inserir uma passando o
 
 - Produtos
 
-Já os produtos, além de todas informações que o enunciado pede, foi acrescentado o estoque de cada um deles, então pode ser passado também a quantidade que tem no estoque para inserir um, associando também a uma categoria. Já que cada categoria possui varios produtos. Coloquei metodos como, adicionar estoque ao produto, remover estoque do produto, editar produto, listar produto por categoria, remover produto e claro, o de criar.
+Já os produtos, além de todas informações que o enunciado pede, foi acrescentado o estoque de cada um deles, para previnir-se de vender algo que não está mais disponivel, então pode ser passado também a quantidade que tem no estoque para inserir um, associando também a uma categoria. Já que cada categoria possui varios produtos. Coloquei metodos como, adicionar estoque ao produto, remover estoque do produto, editar produto, listar produto por categoria, remover produto e claro, o de criar.
 
 - Usuario
 
-Essa parte foi um acrescimo, onde é possivel ter um usuario, bem simples, apenas com cpf, email e nome. Cada usuario pode ter um carrinho de compra e várias vendas. Foi feito metodos para manipular tudo relacionado a ele.
+Essa parte foi um acrescimo, onde é possivel ter um usuario, bem simples, apenas com cpf, email e nome. Cada usuario pode ter um carrinho de compra e várias vendas. Foi feito metodos para manipular tudo relacionado a ele. Optei em fazer essa classe para melhor identificação do usuario e pra quem sabe expandir o comercio para fazer entregas futuramente, adicionando taxas, endereços e etc.
 
 - Carrinho
 
-O carrinho recebe uma lista de Itens, e contém também um usuario, a quantidade de itens e o valor total. Nessa lista de itens foi criado uma classe a parte nomeada de "ItemCarrinho", onde é passado o preço unitario e a quantidade. Todos usuarios podem ter um unico carrinho, e todos carrinhos podem ter um unico usuario, então, assim que adicionado um produto ao carrinho, o usuario automaticamente gera esse carrinho, e, se o carrinho ficar vazio, ele é deletado. Os metodos possiveis para manipular são adicionar itens ao carrinho, remover, listar itens do carrinho de um usuario e deletar. 
+O carrinho recebe uma lista de Itens, e contém também um usuario, a quantidade de itens e o valor total. Nessa lista de itens foi criado uma classe a parte nomeada de "ItemCarrinho", onde é passado o preço unitario e a quantidade. Todos usuarios podem ter um unico carrinho, e todos carrinhos podem ter um unico usuario, então, assim que adicionado um produto ao carrinho, o usuario automaticamente gera esse carrinho, e, se o carrinho ficar vazio, ele é deletado, Optei por sempre deixar o carrinho ativo apenas pra quando existir algum produto para melhor fluidez do programa, e ele ocupar menos espaço possivel. para  Os metodos possiveis para manipular são adicionar itens ao carrinho, remover, listar itens do carrinho de um usuario e deletar. 
 
 - Venda
 
-Para essa parte, podemos finalizar uma venda. Assim que finalizado a venda, o carrinho do usuario ficam vazio, é descontado o valor total do estoque e os itens vendidos vao para um histórico separado, para isso acontecer, é necessario passar a forma de pagamento e a id do usuario que deseja finalizar a venda. outro método é o de listar as vendas. 
+Para essa parte, podemos finalizar uma venda. Assim que finalizado a venda, o carrinho do usuario ficam vazio e automaticamente é deletado para ocupar menos espaço na memoria, é descontado o valor total do estoque e os itens vendidos vao para um histórico separado para poder fazer eventuais controles e etc. para isso acontecer, é necessario passar a forma de pagamento e a id do usuario que deseja finalizar a venda. além disso temos outro método que é o de listar as vendas do dia para eventuais relatórios de venda do dia. 

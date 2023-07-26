@@ -7,6 +7,7 @@ import com.grocery.jumarket.service.impl.VendaService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/api/venda")
@@ -26,6 +27,13 @@ class VendaResource(
     @GetMapping
     fun listarVendas(): ResponseEntity<List<VendaDTO>> {
         val vendas = vendaService.listarVendas()
+        return ResponseEntity.ok(vendas.map { it.toDTO() })
+    }
+
+    @GetMapping("/data")
+    fun listarVendasPorData(@RequestParam("data") data: String): ResponseEntity<List<VendaDTO>> {
+        val dataVenda = LocalDate.parse(data)
+        val vendas = vendaService.listarVendasPorData(dataVenda)
         return ResponseEntity.ok(vendas.map { it.toDTO() })
     }
 }

@@ -18,8 +18,9 @@ import com.grocery.jumarket.service.exception.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
+import java.time.LocalDate
 
-    @Service
+@Service
     @Transactional
     class VendaService(
         private val vendaRepository: VendaRepository,
@@ -57,12 +58,12 @@ import java.math.BigDecimal
                 val itemVendido = ItemVendido(
                     produto = produto,
                     quantidade = itemCarrinho.quantidade,
-                    precoUnitario = produto.precoUnitario
+                    precoUnitario = produto.precoUnitario,
                 )
 
                 venda.adicionarItemVendido(itemVendido)
                 venda.valorTotal += itemVendido.precoUnitario.multiply(BigDecimal.valueOf(itemVendido.quantidade))
-
+                venda.dataVenda = LocalDate.now()
                 produto.quantidadeEstoque -= itemCarrinho.quantidade
             }
 
@@ -78,4 +79,8 @@ import java.math.BigDecimal
         override fun listarVendas(): List<Venda> {
             return vendaRepository.findAll()
         }
+
+   override fun listarVendasPorData(data: LocalDate): List<Venda> {
+        return vendaRepository.findAllByDataVenda(data)
+    }
     }

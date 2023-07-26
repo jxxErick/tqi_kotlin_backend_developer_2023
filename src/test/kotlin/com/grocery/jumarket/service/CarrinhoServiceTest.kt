@@ -221,6 +221,7 @@ class CarrinhoServiceTest {
         val carrinho = carrinhoService.getCarrinhoPorUsuario(usuarioFakeSemCarrinho.id!!)
 
         Assertions.assertNull(carrinho)
+        Assertions.assertThrows(NotFoundException::class.java) { carrinho }
         verify(exactly = 1) { usuarioRepository.findById(usuarioFakeSemCarrinho.id!!) }
     }
 }

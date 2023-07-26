@@ -6,6 +6,7 @@ import com.grocery.jumarket.dto.request.VendaDTO
 import com.grocery.jumarket.ennumeration.FormaDePagamento
 import jakarta.persistence.*
 import java.math.BigDecimal
+import java.time.LocalDate
 
 @Entity
 data class Venda(
@@ -25,7 +26,10 @@ data class Venda(
         val formaDePagamento: FormaDePagamento,
 
         @OneToMany(mappedBy = "venda", cascade = [CascadeType.ALL], orphanRemoval = true)
-        val itensVendidos: MutableList<ItemVendido> = mutableListOf()
+        val itensVendidos: MutableList<ItemVendido> = mutableListOf(),
+
+        @Column(nullable = false)
+        var dataVenda: LocalDate = LocalDate.now()
 ) {
         fun adicionarItemVendido(itemVendido: ItemVendido) {
                 itensVendidos.add(itemVendido)
