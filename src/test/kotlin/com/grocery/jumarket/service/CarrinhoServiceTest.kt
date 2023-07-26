@@ -218,10 +218,10 @@ class CarrinhoServiceTest {
         )
 
         every { usuarioRepository.findById(usuarioFakeSemCarrinho.id!!) } returns Optional.of(usuarioFakeSemCarrinho)
-        val carrinho = carrinhoService.getCarrinhoPorUsuario(usuarioFakeSemCarrinho.id!!)
 
-        Assertions.assertNull(carrinho)
-        Assertions.assertThrows(NotFoundException::class.java) { carrinho }
-        verify(exactly = 1) { usuarioRepository.findById(usuarioFakeSemCarrinho.id!!) }
+        val exception = assertThrows<NotFoundException> {
+           carrinhoService.getCarrinhoPorUsuario(usuarioFakeSemCarrinho.id!!)
+        }
+        Assertions.assertEquals("Carrinho do usuario vazio", exception.message)
     }
 }

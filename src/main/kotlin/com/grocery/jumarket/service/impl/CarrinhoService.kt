@@ -88,7 +88,11 @@ class CarrinhoService (
     override fun getCarrinhoPorUsuario(usuarioId: Long): Carrinho? {
         val usuario = usuarioRepository.findById(usuarioId)
             .orElseThrow { NotFoundException("Usuário não encontrado") }
+        if(usuario.carrinho == null){
+            throw NotFoundException("Carrinho do usuario vazio")
+        } else {
         return usuario.carrinho
+        }
     }
 
     fun criarCarrinhoCasoAdicioneProduto(usuario: Usuario): Carrinho {
