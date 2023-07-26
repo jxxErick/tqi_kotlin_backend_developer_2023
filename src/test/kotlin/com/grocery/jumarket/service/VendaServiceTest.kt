@@ -175,5 +175,17 @@ class VendaServiceTest {
         assertTrue(listaDeVendasData2.contains(venda2))
         assertFalse(listaDeVendasData2.contains(venda1))
     }
+
+    @Test
+    fun `deve lançar NotFoundException ao listar vendas por data quando não há vendas`() {
+        val dataVenda = LocalDate.of(2023, 1, 1)
+        every { vendaRepository.findAllByDataVenda(dataVenda) } returns emptyList()
+
+        val exception = assertThrows<NotFoundException> {
+            vendaService.listarVendasPorData(dataVenda)
+        }
+
+        assertEquals("Nenhuma venda encontrada para a data informada", exception.message)
+    }
 }
 

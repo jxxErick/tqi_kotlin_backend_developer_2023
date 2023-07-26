@@ -2,13 +2,8 @@ package com.grocery.jumarket.service.impl
 
 import com.grocery.jumarket.domain.ItemVendido
 import com.grocery.jumarket.domain.Venda
-import com.grocery.jumarket.dto.request.FinalizarVendaDTO
-import com.grocery.jumarket.dto.request.ItemVendidoDTO
-import com.grocery.jumarket.dto.request.UsuarioDTO
-import com.grocery.jumarket.dto.request.VendaDTO
 import com.grocery.jumarket.ennumeration.FormaDePagamento
 import com.grocery.jumarket.repositories.CarrinhoRepository
-import com.grocery.jumarket.repositories.ProdutoRepository
 import com.grocery.jumarket.repositories.UsuarioRepository
 import com.grocery.jumarket.repositories.VendaRepository
 import com.grocery.jumarket.service.IVendaService

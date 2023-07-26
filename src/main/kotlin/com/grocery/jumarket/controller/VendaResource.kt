@@ -1,13 +1,13 @@
 package com.grocery.jumarket.controller
 
+import com.grocery.jumarket.dto.request.DataVendaDTO
 import com.grocery.jumarket.dto.request.FinalizarVendaDTO
-import com.grocery.jumarket.dto.request.VendaDTO
+import com.grocery.jumarket.dto.view.VendaViewDTO
 import com.grocery.jumarket.ennumeration.FormaDePagamento
 import com.grocery.jumarket.service.impl.VendaService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDate
 
 @RestController
 @RequestMapping("/api/venda")
@@ -16,7 +16,7 @@ class VendaResource(
 ) {
 
     @PostMapping("/finalizar")
-    fun finalizarVenda(@RequestBody finalizarVendaDTO: FinalizarVendaDTO): ResponseEntity<VendaDTO> {
+    fun finalizarVenda(@RequestBody finalizarVendaDTO: FinalizarVendaDTO): ResponseEntity<VendaViewDTO> {
         val vendaFinalizada = vendaService.finalizarVenda(
             formaDePagamento = FormaDePagamento.valueOf(finalizarVendaDTO.formaDePagamento),
             usuarioId = finalizarVendaDTO.usuarioId
@@ -25,14 +25,14 @@ class VendaResource(
     }
 
     @GetMapping
-    fun listarVendas(): ResponseEntity<List<VendaDTO>> {
+    fun listarVendas(): ResponseEntity<List<VendaViewDTO>> {
         val vendas = vendaService.listarVendas()
         return ResponseEntity.ok(vendas.map { it.toDTO() })
     }
 
-    @GetMapping("/data")
-    fun listarVendasPorData(@RequestParam("data") data: String): ResponseEntity<List<VendaDTO>> {
-        val dataVenda = LocalDate.parse(data)
+    @PostMapping("/data")
+    fun listarVendasPorData(@RequestBody dataVendaDTO: DataVendaDTO): ResponseEntity<List<VendaViewDTO>> {
+        val dataVenda = dataVendaDTO.dataVenda
         val vendas = vendaService.listarVendasPorData(dataVenda)
         return ResponseEntity.ok(vendas.map { it.toDTO() })
     }

@@ -67,7 +67,6 @@ class CarrinhoService (
     }
 
     override fun listarItensPorUsuario(usuarioId: Long): List<ItemCarrinho> {
-
         val usuario = usuarioRepository.findById(usuarioId)
             .orElseThrow { NotFoundException("Usuário não encontrado") }
 
